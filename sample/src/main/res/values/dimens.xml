@@ -16,5 +16,5 @@
 
 <resources>
     <dimen name="default_decoration_size">8dp</dimen>
-    <dimen name="default_edge_decoration_size">16dp</dimen>
+    <dimen name="default_edge_decoration_size">24dp</dimen>
 </resources>
