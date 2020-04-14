@@ -1,6 +1,10 @@
 # Decorator
 
-A collection of ItemDecorations for RecyclerView
+In Android, when you work with RecyclerViews, the standard way of working with paddings and margins is to work with fixed dimensions inside of the layout files.
+
+While this is works for many applications, sometimes the number of required layout files increases too or becomes hard to maintain.
+
+Decorator is a library that helps creating composable margins and dividers in RecyclerViews.
 
 ## Install
 
