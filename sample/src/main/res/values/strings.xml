@@ -1,0 +1,53 @@
+<!--
+  ~ Copyright (c) 2020. Cabriole
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">Decorator</string>
+    <string name="main_fragment_label">Main Option Fragment</string>
+    <string name="option_fragment_label">Option Fragment</string>
+
+    <!-- Decorators -->
+    <string name="decorator_linear_margin">LinearMarginDecoration</string>
+    <string name="decorator_linear_margin_summary">A Decorator for a LinearLayoutManager that applies a margin to all sides of an item</string>
+
+    <string name="decorator_grid_margin">GridMarginDecoration</string>
+    <string name="decorator_grid_margin_summary">A Decorator for a GridLayoutManager that applies an even spaced margin to all sides of an item</string>
+
+    <string name="decorator_grid_span_margin">GridSpanMarginDecoration</string>
+    <string name="decorator_grid_span_margin_summary">Similar to GridMarginDecoration, but supports columns with different span sizes</string>
+
+    <string name="decorator_linear_divider">LinearDividerDecoration</string>
+    <string name="decorator_linear_divider_summary">A Decorator for a LinearLayoutManager that draws a divider between items</string>
+
+    <string name="decorator_grid_divider">GridDividerDecoration</string>
+    <string name="decorator_grid_divider_summary">A Decorator for a GridLayoutManager that draws a divider between items</string>
+
+    <string name="decorator_linear_bounds_margin">LinearBoundsMarginDecoration</string>
+    <string name="decorator_linear_bounds_margin_summary">A Decorator for a LinearLayoutManager that applies a margin to the bounds of the RecyclerView</string>
+
+    <string name="decorator_grid_bounds_margin">GridBoundsMarginDecoration</string>
+    <string name="decorator_grid_bounds_margin_summary">A Decorator for a GridLayoutManager that applies a margin to the bounds of the RecyclerView</string>
+
+    <string name="decorator_option_padding">Decoration size (%1$d dp)</string>
+    <string name="decorator_orientation_vertical">Vertical orientation</string>
+    <string name="decorator_option_inverted">Inverted</string>
+
+
+    <string name="decorator_divider_margin_width">Divider width margin (%1$d dp)</string>
+
+    <string name="decorator_divider_margin_height">Divider height margin (%1$d dp)</string>
+
+</resources>
