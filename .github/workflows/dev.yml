@@ -10,7 +10,7 @@ on:
   push:
     paths-ignore:
       - '**/*.md'
-     - '**/*.txt'
+      - '**/*.txt'
     branches:
       - 'dev'
 
