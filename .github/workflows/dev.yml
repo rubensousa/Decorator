@@ -4,11 +4,13 @@ on:
   pull_request:
     paths-ignore:
       - '**/*.md'
+      - '**/*.txt'
     branches:
       - 'dev'
   push:
     paths-ignore:
       - '**/*.md'
+      - '**/*.txt'
     branches:
       - 'dev'
 
