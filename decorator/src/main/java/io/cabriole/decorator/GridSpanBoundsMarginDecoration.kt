@@ -66,7 +66,7 @@ class GridSpanBoundsMarginDecoration(
         this.bottomMargin = bottom
     }
 
-    fun setGridLayoutManage(layoutManager: GridLayoutManager) {
+    fun setGridLayoutManager(layoutManager: GridLayoutManager) {
         this.gridLayoutManager = layoutManager
     }
 

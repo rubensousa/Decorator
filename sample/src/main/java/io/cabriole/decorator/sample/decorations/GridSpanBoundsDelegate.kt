@@ -52,7 +52,7 @@ class GridSpanBoundsDelegate(private val context: Context) : DecorationDelegate(
                 }
             }
         }
-        decoration.setGridLayoutManage(layoutManager)
+        decoration.setGridLayoutManager(layoutManager)
         return layoutManager
     }
 

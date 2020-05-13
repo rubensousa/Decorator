@@ -52,7 +52,7 @@ class GridSpanMarginDecoration(
         this.margin = margin
     }
 
-    fun setGridLayoutManage(layoutManager: GridLayoutManager) {
+    fun setGridLayoutManager(layoutManager: GridLayoutManager) {
         this.gridLayoutManager = layoutManager
     }
 
