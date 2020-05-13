@@ -154,13 +154,13 @@ class GridSpanBoundsMarginDecoration(
             if (!gridLayoutManager.reverseLayout) {
                 outRect.top = topMargin
             } else {
-                outRect.bottom = topMargin
+                outRect.bottom = bottomMargin
             }
         } else if (isInLastLine) {
             if (!gridLayoutManager.reverseLayout) {
                 outRect.bottom = bottomMargin
             } else {
-                outRect.top = bottomMargin
+                outRect.top = topMargin
             }
         }
     }
@@ -191,13 +191,13 @@ class GridSpanBoundsMarginDecoration(
             if (!gridLayoutManager.reverseLayout) {
                 outRect.left = leftMargin
             } else {
-                outRect.right = leftMargin
+                outRect.right = rightMargin
             }
         } else if (isInLastLine) {
             if (!gridLayoutManager.reverseLayout) {
                 outRect.right = rightMargin
             } else {
-                outRect.left = rightMargin
+                outRect.left = leftMargin
             }
         }
     }
