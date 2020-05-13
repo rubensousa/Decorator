@@ -29,6 +29,10 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * @param topMargin margin to be applied to the top bound
  *
+ * @param rightMargin margin to be applied to the right bound
+ *
+ * @param bottomMargin margin to be applied to the bottom bound
+ *
  * @param orientation the orientation of the RecyclerView. Default is [RecyclerView.VERTICAL]
  *
  * @param inverted true if the LayoutManager is inverted and items are laid out

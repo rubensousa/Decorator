@@ -23,38 +23,62 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * An item decoration that applies a fixed margin to all sides for a grid.
+ *  A [RecyclerView.ItemDecoration] that applies a margin to the bounds of the RecyclerView
  *
- * Unlike [GridMarginDecoration], this one supports grids with different span sizes
+ * Unlike [GridBoundsMarginDecoration], this one supports grids with different span sizes
  * but requires a [GridLayoutManager].
  *
- * @param margin margin to be applied to all sides of an item
+ * @param leftMargin margin to be applied to the left bound
+ *
+ * @param topMargin margin to be applied to the top bound
+ *
+ * @param rightMargin margin to be applied to the right bound
+ *
+ * @param bottomMargin margin to be applied to the bottom bound
  *
  * @param gridLayoutManager the [GridLayoutManager] used by the [RecyclerView]
  *
  * @param decorationLookup an optional [DecorationLookup] to filter positions
  * that shouldn't have this decoration applied to
  *
+ * Any property change should be followed by [RecyclerView.invalidateItemDecorations]
+ *
  * Any property change in [margin] or [gridLayoutManager]
  * should be followed by [RecyclerView.invalidateItemDecorations]
  */
-class GridSpanMarginDecoration(
-    @Px private var margin: Int,
+class GridSpanBoundsMarginDecoration(
+    @Px private var leftMargin: Int = 0,
+    @Px private var topMargin: Int = 0,
+    @Px private var rightMargin: Int = 0,
+    @Px private var bottomMargin: Int = 0,
     private var gridLayoutManager: GridLayoutManager,
     private var decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
-    fun getMargin() = margin
-
-    fun getGridLayoutManager() = gridLayoutManager
-
     fun setMargin(margin: Int) {
-        this.margin = margin
+        setMargin(left = margin, top = margin, right = margin, bottom = margin)
+    }
+
+    fun setMargin(left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
+        this.leftMargin = left
+        this.topMargin = top
+        this.rightMargin = right
+        this.bottomMargin = bottom
     }
 
     fun setGridLayoutManage(layoutManager: GridLayoutManager) {
         this.gridLayoutManager = layoutManager
     }
+
+    fun getGridLayoutManager() = gridLayoutManager
+
+    fun getLeftMargin() = leftMargin
+
+    fun getTopMargin() = topMargin
+
+    fun getRightMargin() = rightMargin
+
+    fun getBottomMargin() = bottomMargin
 
     /**
      * @param decorationLookup an optional [DecorationLookup] to filter positions
@@ -63,6 +87,7 @@ class GridSpanMarginDecoration(
     fun setDecorationLookup(decorationLookup: DecorationLookup?) {
         this.decorationLookup = decorationLookup
     }
+
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -111,46 +136,32 @@ class GridSpanMarginDecoration(
         columnIndex: Int,
         spanSize: Int
     ) {
-        val startPadding = margin * ((columns - columnIndex) / columns.toFloat())
-        val endPadding = margin * ((columnIndex + 1 + (spanSize - 1)) / columns.toFloat())
-
         val isInFirstLine = position <= columnIndex
 
         // Our position plus the size we occupy will be greater
         // or equal than the item count if we're in the last line.
         val isInLastLine = position + (columns - columnIndex - spanSize) >= itemCount - 1
-        val applyHalfBottomPadding = isInFirstLine != isInLastLine
 
-        outRect.left = startPadding.toInt()
-        outRect.right = endPadding.toInt()
+        if (columnIndex == 0) {
+            outRect.left = leftMargin
+        }
+
+        if (columnIndex + spanSize >= columns) {
+            outRect.right = rightMargin
+        }
 
         if (isInFirstLine) {
             if (!gridLayoutManager.reverseLayout) {
-                outRect.top = margin
-                if (applyHalfBottomPadding) {
-                    outRect.bottom = margin / 2
-                } else {
-                    outRect.bottom = margin
-                }
+                outRect.top = topMargin
             } else {
-                outRect.bottom = margin
-                if (applyHalfBottomPadding) {
-                    outRect.top = margin / 2
-                } else {
-                    outRect.top = margin
-                }
+                outRect.bottom = topMargin
             }
         } else if (isInLastLine) {
             if (!gridLayoutManager.reverseLayout) {
-                outRect.top = margin / 2
-                outRect.bottom = margin
+                outRect.bottom = bottomMargin
             } else {
-                outRect.top = margin
-                outRect.bottom = margin / 2
+                outRect.top = bottomMargin
             }
-        } else {
-            outRect.top = margin / 2
-            outRect.bottom = margin / 2
         }
     }
 
@@ -162,46 +173,32 @@ class GridSpanMarginDecoration(
         columnIndex: Int,
         spanSize: Int
     ) {
-        val startPadding = margin * ((columns - columnIndex) / columns.toFloat())
-        val endPadding = margin * ((columnIndex + 1 + (spanSize - 1)) / columns.toFloat())
-
         val isInFirstLine = position <= columnIndex
 
         // Our position plus the size we occupy will be greater
         // or equal than the item count if we're in the last line.
         val isInLastLine = position + (columns - columnIndex - spanSize) >= itemCount - 1
-        val applyHalfBottomPadding = isInFirstLine != isInLastLine
 
-        outRect.top = startPadding.toInt()
-        outRect.bottom = endPadding.toInt()
+        if (columnIndex == 0) {
+            outRect.top = topMargin
+        }
+
+        if (columnIndex + spanSize >= columns) {
+            outRect.bottom = bottomMargin
+        }
 
         if (isInFirstLine) {
             if (!gridLayoutManager.reverseLayout) {
-                outRect.left = margin
-                if (applyHalfBottomPadding) {
-                    outRect.right = margin / 2
-                } else {
-                    outRect.right = margin
-                }
+                outRect.left = leftMargin
             } else {
-                outRect.right = margin
-                if (applyHalfBottomPadding) {
-                    outRect.left = margin / 2
-                } else {
-                    outRect.left = margin
-                }
+                outRect.right = leftMargin
             }
         } else if (isInLastLine) {
             if (!gridLayoutManager.reverseLayout) {
-                outRect.left = margin / 2
-                outRect.right = margin
+                outRect.right = rightMargin
             } else {
-                outRect.left = margin
-                outRect.right = margin / 2
+                outRect.left = rightMargin
             }
-        } else {
-            outRect.left = margin / 2
-            outRect.right = margin / 2
         }
     }
 

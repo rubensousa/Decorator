@@ -41,6 +41,9 @@
     <string name="decorator_grid_bounds_margin">GridBoundsMarginDecoration</string>
     <string name="decorator_grid_bounds_margin_summary">A Decorator for a GridLayoutManager that applies a margin to the bounds of the RecyclerView</string>
 
+    <string name="decorator_grid_span_bounds_margin">GridSpanBoundsMarginDecoration</string>
+    <string name="decorator_grid_span_bounds_margin_summary">Similar to GridBoundsMarginDecoration, but supports columns with different span sizes</string>
+
     <string name="decorator_option_padding">Decoration size (%1$d dp)</string>
     <string name="decorator_orientation_vertical">Vertical orientation</string>
     <string name="decorator_option_inverted">Inverted</string>

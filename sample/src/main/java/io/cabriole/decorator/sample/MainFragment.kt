@@ -95,6 +95,13 @@ class MainFragment : Fragment(R.layout.screen_options) {
                 R.string.decorator_grid_bounds_margin_summary
             )
         )
+        optionList.add(
+            OptionModel(
+                DecorationFragment.ARG_GRID_SPAN_BOUNDS_DECORATION,
+                R.string.decorator_grid_span_bounds_margin,
+                R.string.decorator_grid_span_bounds_margin_summary
+            )
+        )
         listController.submitList(optionList)
     }
 
