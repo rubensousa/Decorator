@@ -35,6 +35,7 @@ class DecorationFragment : Fragment(R.layout.screen_decoration),
         const val ARG_GRID_DIVIDER_DECORATION = 4
         const val ARG_LINEAR_BOUNDS_DECORATION = 5
         const val ARG_GRID_BOUNDS_DECORATION = 6
+        const val ARG_GRID_SPAN_BOUNDS_DECORATION = 7
     }
 
     private val binding get() = _binding!!

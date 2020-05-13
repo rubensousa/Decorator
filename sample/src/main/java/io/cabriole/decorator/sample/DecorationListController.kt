@@ -47,6 +47,8 @@ class DecorationListController(
             GridBoundsDelegate(fragment.resources)
         decorations[DecorationFragment.ARG_GRID_SPAN_DECORATION] =
             GridSpanDelegate(fragment.requireActivity())
+        decorations[DecorationFragment.ARG_GRID_SPAN_BOUNDS_DECORATION] =
+            GridSpanBoundsDelegate(fragment.requireActivity())
         decorations[DecorationFragment.ARG_GRID_DIVIDER_DECORATION] =
             GridDividerDelegate(fragment.resources)
     }
