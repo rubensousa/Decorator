@@ -158,12 +158,17 @@ class LinearMarginDecoration(
                 outRect.top = topMargin / 2
                 outRect.bottom = bottomMargin
             }
-        } else if (position == itemCount - 1) {
+        }
+        if (position == itemCount - 1) {
             if (!inverted) {
-                outRect.top = topMargin / 2
+                if (position != 0) {
+                    outRect.top = topMargin / 2
+                }
                 outRect.bottom = bottomMargin
             } else {
-                outRect.bottom = bottomMargin / 2
+                if (position != 0) {
+                    outRect.bottom = bottomMargin / 2
+                }
                 outRect.top = topMargin
             }
         } else {
@@ -183,13 +188,18 @@ class LinearMarginDecoration(
                 outRect.right = rightMargin
                 outRect.left = leftMargin / 2
             }
-        } else if (position == itemCount - 1) {
+        }
+        if (position == itemCount - 1) {
             if (!inverted) {
-                outRect.left = leftMargin / 2
+                if (position != 0) {
+                    outRect.left = leftMargin / 2
+                }
                 outRect.right = rightMargin
             } else {
+                if (position != 0) {
+                    outRect.right = rightMargin / 2
+                }
                 outRect.left = leftMargin
-                outRect.right = rightMargin / 2
             }
         } else {
             outRect.left = leftMargin / 2
