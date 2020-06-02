@@ -9,7 +9,7 @@ Decorator is a library that helps creating composable margins and dividers in Re
 ## Install
 
 ```groovy
-implementation 'io.cabriole:decorator:1.1.0'
+implementation 'io.cabriole:decorator:1.2.0'
 ```
 
 Replace x.x.x with the latest version available
@@ -37,6 +37,12 @@ recyclerView.addItemDecoration(LinearMarginDecoration(
     rightMargin = resources.dpToPx(16),
     bottomMargin = resources.dpToPx(16),
     orientation = RecyclerView.VERTICAL
+))
+```
+
+```kotlin
+recyclerView.addItemDecoration(LinearMarginDecoration.createVertical(
+    verticalMargin = resources.dpToPx(16)
 ))
 ```
 
@@ -127,7 +133,10 @@ recyclerView.addItemDecoration(LinearBoundsMarginDecoration.create(
 
 ```kotlin
 recyclerView.addItemDecoration(GridBoundsMarginDecoration.create(
-    margin = resources.dpToPx(16),
+    leftMargin = resources.dpToPx(64),
+    topMargin = resources.dpToPx(16),
+    rightMargin = resources.dpToPx(64),
+    bottomMargin = resources.dpToPx(16),
     columnProvider = object : ColumnProvider {
         override fun getNumberOfColumns(): Int = 3
     }
@@ -144,21 +153,15 @@ Example for a vertical RecyclerView:
 // Add a vertical margin to the first and last items. 
 // The first item will have a top margin and the last item a bottom margin
 recyclerView.addItemDecoration(
-    LinearBoundsMarginDecoration(
-        leftMargin = 0,
-        rightMargin = 0,
-        topMargin = edgeDecorationSize,
-        bottomMargin = edgeDecorationSize
+    LinearBoundsMarginDecoration.createVertical(
+        verticalMargin = edgeDecorationSize
     )
 )
 
-// Add a margin between all items
+// Add a vertical margin between all items
 recyclerView.addItemDecoration(
-    LinearMarginDecoration(
-        leftMargin = 0,
-        rightMargin = 0,
-        topMargin = marginDecorationSize,
-        bottomMargin = marginDecorationSize
+    LinearMarginDecoration.createVertical(
+        verticalMargin = marginDecorationSize
     )
 )
 
