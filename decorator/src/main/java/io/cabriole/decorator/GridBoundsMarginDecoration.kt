@@ -86,7 +86,7 @@ class GridBoundsMarginDecoration(
 
         /**
          * Creates a [GridBoundsMarginDecoration] that applies the same margin
-         * to the top and bottom sides
+         * to the left and right sides
          */
         @JvmStatic
         fun createHorizontal(
