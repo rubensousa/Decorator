@@ -196,23 +196,26 @@ class LinearMarginDecoration(
     private fun applyVerticalOffsets(outRect: Rect, position: Int, itemCount: Int) {
         if (position == 0) {
             if (!inverted) {
-                outRect.bottom = bottomMargin / 2
+                if (position == itemCount - 1) {
+                    outRect.bottom = bottomMargin
+                } else {
+                    outRect.bottom = bottomMargin / 2
+                }
                 outRect.top = topMargin
             } else {
-                outRect.top = topMargin / 2
-                outRect.bottom = bottomMargin
-            }
-        }
-        if (position == itemCount - 1) {
-            if (!inverted) {
-                if (position != 0) {
+                if (position == itemCount - 1) {
+                    outRect.top = topMargin
+                } else {
                     outRect.top = topMargin / 2
                 }
                 outRect.bottom = bottomMargin
+            }
+        } else if (position == itemCount - 1) {
+            if (!inverted) {
+                outRect.top = topMargin / 2
+                outRect.bottom = bottomMargin
             } else {
-                if (position != 0) {
-                    outRect.bottom = bottomMargin / 2
-                }
+                outRect.bottom = bottomMargin / 2
                 outRect.top = topMargin
             }
         } else {
