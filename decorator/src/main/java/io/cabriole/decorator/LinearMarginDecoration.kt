@@ -24,13 +24,13 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * An item decoration that applies a margin to all sides of an item
  *
- * @param leftMargin padding to be applied at the left side of an item
+ * @param leftMargin margin to be applied at the left side of an item
  *
- * @param topMargin padding to be applied at the top side of an item
+ * @param topMargin margin to be applied at the top side of an item
  *
- * @param rightMargin padding to be applied at the right side of an item
+ * @param rightMargin margin to be applied at the right side of an item
  *
- * @param bottomMargin padding to be applied at the bottom side of an item
+ * @param bottomMargin margin to be applied at the bottom side of an item
  *
  * @param orientation the orientation of the LayoutManager used by the RecyclerView.
  * Default is [RecyclerView.VERTICAL]
@@ -54,6 +54,50 @@ class LinearMarginDecoration(
 ) : AbstractMarginDecoration(decorationLookup) {
 
     companion object {
+
+        /**
+         * Creates a [LinearMarginDecoration] that applies the same margin
+         * to the top and bottom sides
+         */
+        @JvmStatic
+        fun createVertical(
+            @Px verticalMargin: Int,
+            orientation: Int = RecyclerView.VERTICAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): LinearMarginDecoration {
+            return LinearMarginDecoration(
+                leftMargin = 0,
+                rightMargin = 0,
+                topMargin = verticalMargin,
+                bottomMargin = verticalMargin,
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+
+        /**
+         * Creates a [LinearMarginDecoration] that applies the same margin
+         * to the left and right sides
+         */
+        @JvmStatic
+        fun createHorizontal(
+            @Px horizontalMargin: Int,
+            orientation: Int = RecyclerView.HORIZONTAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): LinearMarginDecoration {
+            return LinearMarginDecoration(
+                leftMargin = horizontalMargin,
+                rightMargin = horizontalMargin,
+                topMargin = 0,
+                bottomMargin = 0,
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
 
         /**
          * Creates a [LinearMarginDecoration] that applies the same margin to all sides
@@ -152,10 +196,18 @@ class LinearMarginDecoration(
     private fun applyVerticalOffsets(outRect: Rect, position: Int, itemCount: Int) {
         if (position == 0) {
             if (!inverted) {
-                outRect.bottom = bottomMargin / 2
+                if (position == itemCount - 1) {
+                    outRect.bottom = bottomMargin
+                } else {
+                    outRect.bottom = bottomMargin / 2
+                }
                 outRect.top = topMargin
             } else {
-                outRect.top = topMargin / 2
+                if (position == itemCount - 1) {
+                    outRect.top = topMargin
+                } else {
+                    outRect.top = topMargin / 2
+                }
                 outRect.bottom = bottomMargin
             }
         } else if (position == itemCount - 1) {
@@ -183,13 +235,18 @@ class LinearMarginDecoration(
                 outRect.right = rightMargin
                 outRect.left = leftMargin / 2
             }
-        } else if (position == itemCount - 1) {
+        }
+        if (position == itemCount - 1) {
             if (!inverted) {
-                outRect.left = leftMargin / 2
+                if (position != 0) {
+                    outRect.left = leftMargin / 2
+                }
                 outRect.right = rightMargin
             } else {
+                if (position != 0) {
+                    outRect.right = rightMargin / 2
+                }
                 outRect.left = leftMargin
-                outRect.right = rightMargin / 2
             }
         } else {
             outRect.left = leftMargin / 2

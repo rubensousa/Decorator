@@ -59,6 +59,58 @@ class GridBoundsMarginDecoration(
     companion object {
 
         /**
+         * Creates a [GridBoundsMarginDecoration] that applies the same margin
+         * to the top and bottom sides
+         */
+        @JvmStatic
+        fun createVertical(
+            @Px verticalMargin: Int,
+            gridLayoutManager: GridLayoutManager,
+            orientation: Int = RecyclerView.VERTICAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): GridBoundsMarginDecoration {
+            return GridBoundsMarginDecoration(
+                leftMargin = 0,
+                rightMargin = 0,
+                topMargin = verticalMargin,
+                bottomMargin = verticalMargin,
+                columnProvider = object : ColumnProvider {
+                    override fun getNumberOfColumns(): Int = gridLayoutManager.spanCount
+                },
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+
+        /**
+         * Creates a [GridBoundsMarginDecoration] that applies the same margin
+         * to the left and right sides
+         */
+        @JvmStatic
+        fun createHorizontal(
+            @Px horizontalMargin: Int,
+            gridLayoutManager: GridLayoutManager,
+            orientation: Int = RecyclerView.VERTICAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): GridBoundsMarginDecoration {
+            return GridBoundsMarginDecoration(
+                leftMargin = horizontalMargin,
+                rightMargin = horizontalMargin,
+                topMargin = 0,
+                bottomMargin = 0,
+                columnProvider = object : ColumnProvider {
+                    override fun getNumberOfColumns(): Int = gridLayoutManager.spanCount
+                },
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+
+        /**
          * Creates a [GridBoundsMarginDecoration] that applies the same margin to all sides
          */
         @JvmStatic
@@ -175,10 +227,9 @@ class GridBoundsMarginDecoration(
     ) {
         if (columnIndex == 0) {
             outRect.left = leftMargin
-            if (columns == 1) {
-                outRect.right = rightMargin
-            }
-        } else if (columnIndex == columns - 1) {
+        }
+
+        if (columnIndex == columns - 1) {
             outRect.right = rightMargin
         }
 
@@ -188,7 +239,9 @@ class GridBoundsMarginDecoration(
             } else {
                 outRect.bottom = bottomMargin
             }
-        } else if (lineIndex == lines - 1) {
+        }
+
+        if (lineIndex == lines - 1) {
             if (!inverted) {
                 outRect.bottom = bottomMargin
             } else {
@@ -206,10 +259,9 @@ class GridBoundsMarginDecoration(
     ) {
         if (columnIndex == 0) {
             outRect.top = topMargin
-            if (columns == 1) {
-                outRect.bottom = bottomMargin
-            }
-        } else if (columnIndex == columns - 1) {
+        }
+
+        if (columnIndex == columns - 1) {
             outRect.bottom = bottomMargin
         }
 
@@ -219,13 +271,16 @@ class GridBoundsMarginDecoration(
             } else {
                 outRect.right = leftMargin
             }
-        } else if (lineIndex == lines - 1) {
+        }
+
+        if (lineIndex == lines - 1) {
             if (!inverted) {
                 outRect.right = topMargin
             } else {
                 outRect.left = topMargin
             }
         }
+
     }
 
 }

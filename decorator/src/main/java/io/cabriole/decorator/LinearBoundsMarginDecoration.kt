@@ -55,6 +55,50 @@ class LinearBoundsMarginDecoration(
     companion object {
 
         /**
+         * Creates a [LinearBoundsMarginDecoration] that applies the same margin
+         * to the top and bottom sides
+         */
+        @JvmStatic
+        fun createVertical(
+            @Px verticalMargin: Int,
+            orientation: Int = RecyclerView.VERTICAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): LinearBoundsMarginDecoration {
+            return LinearBoundsMarginDecoration(
+                leftMargin = 0,
+                rightMargin = 0,
+                topMargin = verticalMargin,
+                bottomMargin = verticalMargin,
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+
+        /**
+         * Creates a [LinearBoundsMarginDecoration] that applies the same margin
+         * to the left and right sides
+         */
+        @JvmStatic
+        fun createHorizontal(
+            @Px horizontalMargin: Int,
+            orientation: Int = RecyclerView.HORIZONTAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): LinearBoundsMarginDecoration {
+            return LinearBoundsMarginDecoration(
+                leftMargin = horizontalMargin,
+                rightMargin = horizontalMargin,
+                topMargin = 0,
+                bottomMargin = 0,
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+
+        /**
          * Creates a [LinearBoundsMarginDecoration] that applies the same margin to all sides
          */
         @JvmStatic
@@ -145,7 +189,8 @@ class LinearBoundsMarginDecoration(
             } else {
                 outRect.bottom = bottomMargin
             }
-        } else if (position == itemCount - 1) {
+        }
+        if (position == itemCount - 1) {
             if (!inverted) {
                 outRect.bottom = bottomMargin
             } else {
@@ -164,8 +209,9 @@ class LinearBoundsMarginDecoration(
             } else {
                 outRect.right = rightMargin
             }
+        }
 
-        } else if (position == itemCount - 1) {
+        if (position == itemCount - 1) {
             if (!inverted) {
                 outRect.right = rightMargin
             } else {
