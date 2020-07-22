@@ -68,8 +68,7 @@ recyclerView.addItemDecoration(GridMarginDecoration(
 ```kotlin
 recyclerView.addItemDecoration(GridSpanMarginDecoration(
     margin = resources.dpToPx(8),
-    gridLayoutManager = gridLayoutManager,
-    orientation = RecyclerView.VERTICAL
+    gridLayoutManager = gridLayoutManager
 ))
 ```
 
