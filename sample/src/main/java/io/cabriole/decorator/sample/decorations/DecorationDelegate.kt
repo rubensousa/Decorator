@@ -43,11 +43,11 @@ abstract class DecorationDelegate {
 
     }
 
-    open fun setWidthMargin(widthMargin: Int) {
+    open fun setHorizontalMargin(margin: Int) {
 
     }
 
-    open fun setHeightMargin(heightMargin: Int) {
+    open fun setVerticalMargin(margin: Int) {
 
     }
 
@@ -61,6 +61,6 @@ abstract class DecorationDelegate {
 
     open fun getDefaultSizeDp() = 8
 
-    open fun hasWidthOrHeightMargin() = false
+    open fun hasVerticalAndHorizontalMargin() = false
 
 }

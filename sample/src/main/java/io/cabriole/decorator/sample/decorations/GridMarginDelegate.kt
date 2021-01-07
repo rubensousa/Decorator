@@ -30,14 +30,18 @@ class GridMarginDelegate(private val resources: Resources) : DecorationDelegate(
         const val DEFAULT_COLUMNS = 3
     }
 
-    private var decoration = GridMarginDecoration(
+    private var decoration = GridMarginDecoration.create(
         margin = resources.dpToPx(getDefaultSizeDp()),
         columnProvider = object : ColumnProvider {
             override fun getNumberOfColumns(): Int = DEFAULT_COLUMNS
         }
     )
 
-    override fun getSize(): Int = decoration.getMargin()
+    override fun getSize(): Int = if (decoration.getOrientation() == RecyclerView.VERTICAL) {
+        decoration.getVerticalMargin()
+    } else {
+        decoration.getHorizontalMargin()
+    }
 
     override fun createLayoutManager(context: Context): RecyclerView.LayoutManager {
         return GridLayoutManager(
@@ -64,6 +68,18 @@ class GridMarginDelegate(private val resources: Resources) : DecorationDelegate(
         decoration.setMargin(size)
     }
 
+    override fun setVerticalMargin(margin: Int) {
+        decoration.setVerticalMargin(margin)
+    }
+
+    override fun setHorizontalMargin(margin: Int) {
+        decoration.setHorizontalMargin(margin)
+    }
+
     override fun getNumberOfItems(): Int = DEFAULT_COLUMNS * 10
+
+    override fun hasVerticalAndHorizontalMargin(): Boolean {
+        return true
+    }
 
 }

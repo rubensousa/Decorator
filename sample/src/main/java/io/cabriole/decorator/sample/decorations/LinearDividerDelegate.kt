@@ -82,23 +82,23 @@ class LinearDividerDelegate(private val resources: Resources) : DecorationDelega
         decoration.setDividerSize(size)
     }
 
-    override fun setHeightMargin(heightMargin: Int) {
+    override fun setVerticalMargin(margin: Int) {
         if (decoration.getOrientation() == RecyclerView.VERTICAL) {
-            decoration.setVerticalMargin(heightMargin)
+            decoration.setVerticalMargin(margin)
         } else {
-            decoration.setHorizontalMargin(heightMargin)
+            decoration.setHorizontalMargin(margin)
         }
     }
 
-    override fun setWidthMargin(widthMargin: Int) {
+    override fun setHorizontalMargin(margin: Int) {
         if (decoration.getOrientation() == RecyclerView.VERTICAL) {
-            decoration.setHorizontalMargin(widthMargin)
+            decoration.setHorizontalMargin(margin)
         } else {
-            decoration.setVerticalMargin(widthMargin)
+            decoration.setVerticalMargin(margin)
         }
     }
 
-    override fun hasWidthOrHeightMargin(): Boolean = true
+    override fun hasVerticalAndHorizontalMargin(): Boolean = true
 
     override fun getDefaultSizeDp(): Int = DEFAULT_SIZE
 

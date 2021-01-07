@@ -108,12 +108,12 @@ class DecorationListController(
     }
 
     fun setWidthMargin(margin: Int) {
-        getDelegate().setWidthMargin(margin)
+        getDelegate().setHorizontalMargin(margin)
         recyclerView?.invalidateItemDecorations()
     }
 
     fun setHeightMargin(margin: Int) {
-        getDelegate().setHeightMargin(margin)
+        getDelegate().setVerticalMargin(margin)
         recyclerView?.invalidateItemDecorations()
     }
 

@@ -49,8 +49,8 @@
     <string name="decorator_option_inverted">Inverted</string>
 
 
-    <string name="decorator_divider_margin_width">Divider width margin (%1$d dp)</string>
+    <string name="decorator_divider_margin_width">Horizontal margin (%1$d dp)</string>
 
-    <string name="decorator_divider_margin_height">Divider height margin (%1$d dp)</string>
+    <string name="decorator_divider_margin_height">Vertical margin (%1$d dp)</string>
 
 </resources>
