@@ -50,6 +50,8 @@ class LinearMarginDecoration(
     @Px private var bottomMargin: Int = 0,
     private var orientation: Int = RecyclerView.VERTICAL,
     private var inverted: Boolean = false,
+    private var addBeforeFirstPosition: Boolean = true,
+    private var addAfterLastPosition: Boolean = true,
     private var decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
@@ -64,6 +66,8 @@ class LinearMarginDecoration(
             @Px verticalMargin: Int,
             orientation: Int = RecyclerView.VERTICAL,
             inverted: Boolean = false,
+            addBeforeFirstPosition: Boolean = true,
+            addAfterLastPosition: Boolean = true,
             decorationLookup: DecorationLookup? = null
         ): LinearMarginDecoration {
             return LinearMarginDecoration(
@@ -73,6 +77,8 @@ class LinearMarginDecoration(
                 bottomMargin = verticalMargin,
                 orientation = orientation,
                 inverted = inverted,
+                addBeforeFirstPosition = addBeforeFirstPosition,
+                addAfterLastPosition = addAfterLastPosition,
                 decorationLookup = decorationLookup
             )
         }
@@ -86,6 +92,8 @@ class LinearMarginDecoration(
             @Px horizontalMargin: Int,
             orientation: Int = RecyclerView.HORIZONTAL,
             inverted: Boolean = false,
+            addBeforeFirstPosition: Boolean = true,
+            addAfterLastPosition: Boolean = true,
             decorationLookup: DecorationLookup? = null
         ): LinearMarginDecoration {
             return LinearMarginDecoration(
@@ -95,6 +103,8 @@ class LinearMarginDecoration(
                 bottomMargin = 0,
                 orientation = orientation,
                 inverted = inverted,
+                addBeforeFirstPosition = addBeforeFirstPosition,
+                addAfterLastPosition = addAfterLastPosition,
                 decorationLookup = decorationLookup
             )
         }
@@ -107,6 +117,8 @@ class LinearMarginDecoration(
             @Px margin: Int,
             orientation: Int = RecyclerView.VERTICAL,
             inverted: Boolean = false,
+            addBeforeFirstPosition: Boolean = true,
+            addAfterLastPosition: Boolean = true,
             decorationLookup: DecorationLookup? = null
         ): LinearMarginDecoration {
             return LinearMarginDecoration(
@@ -116,6 +128,8 @@ class LinearMarginDecoration(
                 bottomMargin = margin,
                 orientation = orientation,
                 inverted = inverted,
+                addBeforeFirstPosition = addBeforeFirstPosition,
+                addAfterLastPosition = addAfterLastPosition,
                 decorationLookup = decorationLookup
             )
         }
@@ -135,6 +149,16 @@ class LinearMarginDecoration(
 
     fun setMargin(margin: Int) {
         setMargin(margin, margin, margin, margin)
+    }
+
+    fun setHorizontalMargin(margin: Int) {
+        leftMargin = margin
+        rightMargin = margin
+    }
+
+    fun setVerticalMargin(margin: Int) {
+        topMargin = margin
+        bottomMargin = margin
     }
 
     /**
@@ -197,18 +221,26 @@ class LinearMarginDecoration(
         if (position == 0) {
             if (!inverted) {
                 if (position == itemCount - 1) {
-                    outRect.bottom = bottomMargin
+                    if (addAfterLastPosition) {
+                        outRect.bottom = bottomMargin
+                    }
                 } else {
                     outRect.bottom = bottomMargin / 2
                 }
-                outRect.top = topMargin
+                if (addBeforeFirstPosition) {
+                    outRect.top = topMargin
+                }
             } else {
                 if (position == itemCount - 1) {
-                    outRect.top = topMargin
+                    if (addAfterLastPosition) {
+                        outRect.top = topMargin
+                    }
                 } else {
                     outRect.top = topMargin / 2
                 }
-                outRect.bottom = bottomMargin
+                if (addBeforeFirstPosition) {
+                    outRect.bottom = bottomMargin
+                }
             }
         } else if (position == itemCount - 1) {
             if (!inverted) {
@@ -229,10 +261,14 @@ class LinearMarginDecoration(
     private fun applyHorizontalOffsets(outRect: Rect, position: Int, itemCount: Int) {
         if (position == 0) {
             if (!inverted) {
-                outRect.left = leftMargin
+                if (addBeforeFirstPosition) {
+                    outRect.left = leftMargin
+                }
                 outRect.right = rightMargin / 2
             } else {
-                outRect.right = rightMargin
+                if (addBeforeFirstPosition) {
+                    outRect.right = rightMargin
+                }
                 outRect.left = leftMargin / 2
             }
         }
@@ -241,12 +277,16 @@ class LinearMarginDecoration(
                 if (position != 0) {
                     outRect.left = leftMargin / 2
                 }
-                outRect.right = rightMargin
+                if (addAfterLastPosition) {
+                    outRect.right = rightMargin
+                }
             } else {
                 if (position != 0) {
                     outRect.right = rightMargin / 2
                 }
-                outRect.left = leftMargin
+                if (addAfterLastPosition) {
+                    outRect.left = leftMargin
+                }
             }
         } else {
             outRect.left = leftMargin / 2

@@ -32,9 +32,12 @@ class LinearDividerDelegate(private val resources: Resources) : DecorationDelega
         const val DEFAULT_SIZE = 4
         const val DEFAULT_WIDTH_MARGIN = 16
         const val DEFAULT_HEIGHT_MARGIN = 4
+        const val DEFAULT_SPACE_MARGIN = 16
     }
 
-    private var marginDecoration = LinearMarginDecoration.create(resources.dpToPx(16))
+    private var marginDecoration = LinearMarginDecoration.createHorizontal(
+        resources.dpToPx(DEFAULT_SPACE_MARGIN)
+    )
     private var decoration = LinearDividerDecoration.create(
         color = ResourcesCompat.getColor(resources, R.color.colorDivider, null),
         size = resources.dpToPx(getDefaultSizeDp()),
@@ -66,49 +69,36 @@ class LinearDividerDelegate(private val resources: Resources) : DecorationDelega
     override fun setOrientation(orientation: Int) {
         decoration.setOrientation(orientation)
         marginDecoration.setOrientation(orientation)
+        if (orientation == RecyclerView.VERTICAL) {
+            marginDecoration.setHorizontalMargin(resources.dpToPx(DEFAULT_SPACE_MARGIN))
+            marginDecoration.setVerticalMargin(0)
+        } else {
+            marginDecoration.setHorizontalMargin(0)
+            marginDecoration.setVerticalMargin(resources.dpToPx(DEFAULT_SPACE_MARGIN))
+        }
     }
 
     override fun setSize(size: Int) {
         decoration.setDividerSize(size)
     }
 
-    override fun setHeightMargin(heightMargin: Int) {
+    override fun setVerticalMargin(margin: Int) {
         if (decoration.getOrientation() == RecyclerView.VERTICAL) {
-            decoration.setMargin(
-                top = heightMargin,
-                bottom = heightMargin,
-                left = decoration.getLeftMargin(),
-                right = decoration.getRightMargin()
-            )
+            decoration.setVerticalMargin(margin)
         } else {
-            decoration.setMargin(
-                left = heightMargin,
-                right = heightMargin,
-                top = decoration.getTopMargin(),
-                bottom = decoration.getBottomMargin()
-            )
+            decoration.setHorizontalMargin(margin)
         }
     }
 
-    override fun setWidthMargin(widthMargin: Int) {
+    override fun setHorizontalMargin(margin: Int) {
         if (decoration.getOrientation() == RecyclerView.VERTICAL) {
-            decoration.setMargin(
-                left = widthMargin,
-                right = widthMargin,
-                top = decoration.getTopMargin(),
-                bottom = decoration.getBottomMargin()
-            )
+            decoration.setHorizontalMargin(margin)
         } else {
-            decoration.setMargin(
-                left = decoration.getLeftMargin(),
-                right = decoration.getRightMargin(),
-                top = widthMargin,
-                bottom = widthMargin
-            )
+            decoration.setVerticalMargin(margin)
         }
     }
 
-    override fun hasWidthOrHeightMargin(): Boolean = true
+    override fun hasVerticalAndHorizontalMargin(): Boolean = true
 
     override fun getDefaultSizeDp(): Int = DEFAULT_SIZE
 

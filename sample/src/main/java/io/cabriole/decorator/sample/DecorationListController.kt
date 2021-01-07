@@ -62,10 +62,10 @@ class DecorationListController(
         val delegate = getDelegate()
         recyclerView.layoutManager = delegate.createLayoutManager(fragment.requireActivity())
         val decorations = delegate.getExtraDecorations()
+        recyclerView.addItemDecoration(delegate.getDecoration())
         decorations.forEach { decoration ->
             recyclerView.addItemDecoration(decoration)
         }
-        recyclerView.addItemDecoration(delegate.getDecoration())
         recyclerView.adapter = adapter
         this.recyclerView = recyclerView
         createItems()
@@ -108,17 +108,13 @@ class DecorationListController(
     }
 
     fun setWidthMargin(margin: Int) {
-        getDelegate().setWidthMargin(margin)
+        getDelegate().setHorizontalMargin(margin)
         recyclerView?.invalidateItemDecorations()
     }
 
     fun setHeightMargin(margin: Int) {
-        getDelegate().setHeightMargin(margin)
+        getDelegate().setVerticalMargin(margin)
         recyclerView?.invalidateItemDecorations()
-    }
-
-    fun submitList(list: List<CardModel>) {
-        adapter.submitList(list)
     }
 
     private fun createItems() {
@@ -128,6 +124,10 @@ class DecorationListController(
             items.add(CardModel(id))
         }
         submitList(items)
+    }
+
+    private fun submitList(list: List<CardModel>) {
+        adapter.submitList(list)
     }
 
     fun onDestroyView() {
