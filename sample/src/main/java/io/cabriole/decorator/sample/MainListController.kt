@@ -92,7 +92,7 @@ class MainListController(private val fragment: Fragment) :
                     SingleItemDecorationLookup(),
                     object : DecorationLookup {
                         override fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean {
-                            return position != 4
+                            return position != 4 && position != 3
                         }
                     })
             )
