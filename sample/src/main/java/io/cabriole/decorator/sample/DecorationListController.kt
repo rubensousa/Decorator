@@ -62,10 +62,10 @@ class DecorationListController(
         val delegate = getDelegate()
         recyclerView.layoutManager = delegate.createLayoutManager(fragment.requireActivity())
         val decorations = delegate.getExtraDecorations()
+        recyclerView.addItemDecoration(delegate.getDecoration())
         decorations.forEach { decoration ->
             recyclerView.addItemDecoration(decoration)
         }
-        recyclerView.addItemDecoration(delegate.getDecoration())
         recyclerView.adapter = adapter
         this.recyclerView = recyclerView
         createItems()
@@ -117,10 +117,6 @@ class DecorationListController(
         recyclerView?.invalidateItemDecorations()
     }
 
-    fun submitList(list: List<CardModel>) {
-        adapter.submitList(list)
-    }
-
     private fun createItems() {
         val items = arrayListOf<CardModel>()
         val numberOfItems = getDelegate().getNumberOfItems()
@@ -128,6 +124,10 @@ class DecorationListController(
             items.add(CardModel(id))
         }
         submitList(items)
+    }
+
+    private fun submitList(list: List<CardModel>) {
+        adapter.submitList(list)
     }
 
     fun onDestroyView() {
