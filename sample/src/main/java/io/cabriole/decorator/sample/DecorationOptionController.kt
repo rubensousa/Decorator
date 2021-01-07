@@ -141,7 +141,7 @@ class DecorationOptionController(
         })
 
 
-        if (!delegate.hasWidthOrHeightMargin()) {
+        if (!delegate.hasVerticalAndHorizontalMargin()) {
             widthMarginSeekBar.isVisible = false
             widthMarginTextView.isVisible = false
             heightMarginSeekBar.isVisible = false

@@ -70,12 +70,12 @@ class GridDividerDelegate(private val resources: Resources) : DecorationDelegate
         decoration.setDividerSize(size)
     }
 
-    override fun setHeightMargin(heightMargin: Int) {
-        decoration.setHeightMargin(heightMargin)
+    override fun setVerticalMargin(margin: Int) {
+        decoration.setHeightMargin(margin)
     }
 
-    override fun setWidthMargin(widthMargin: Int) {
-        decoration.setWidthMargin(widthMargin)
+    override fun setHorizontalMargin(margin: Int) {
+        decoration.setWidthMargin(margin)
     }
 
     override fun getSize(): Int = decoration.getDividerSize()
@@ -86,7 +86,7 @@ class GridDividerDelegate(private val resources: Resources) : DecorationDelegate
 
     override fun getDefaultWidthMarginDp(): Int = DEFAULT_WIDTH_MARGIN
 
-    override fun hasWidthOrHeightMargin(): Boolean = true
+    override fun hasVerticalAndHorizontalMargin(): Boolean = true
 
     override fun getNumberOfItems(): Int = DEFAULT_COLUMNS * 10
 

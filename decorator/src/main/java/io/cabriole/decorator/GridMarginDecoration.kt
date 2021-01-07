@@ -27,7 +27,9 @@ import androidx.recyclerview.widget.RecyclerView
  * This only works for grids with fixed span rows.
  * For variable spanned rows, use [GridSpanMarginDecoration].
  *
- * @param margin margin to be applied to all sides of an item
+ * @param horizontalMargin margin to be applied to the start and end side of an item
+ *
+ * @param verticalMargin margin to be applied to the top and bottom sides of an item
  *
  * @param columnProvider a [ColumnProvider] that provides the number of columns
  *
@@ -43,24 +45,96 @@ import androidx.recyclerview.widget.RecyclerView
  * Any property change should be followed by [RecyclerView.invalidateItemDecorations]
  */
 class GridMarginDecoration(
-    @Px private var margin: Int,
+    @Px private var horizontalMargin: Int,
+    @Px private var verticalMargin: Int,
     private var columnProvider: ColumnProvider,
     private var orientation: Int = RecyclerView.VERTICAL,
     private var inverted: Boolean = false,
     private var decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
-    fun getMargin() = margin
+    companion object {
+
+        /**
+         * Creates a [GridMarginDecoration] that applies the same margin to all sides
+         */
+        @JvmStatic
+        fun create(
+            @Px margin: Int,
+            columnProvider: ColumnProvider,
+            orientation: Int = RecyclerView.VERTICAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): GridMarginDecoration {
+            return GridMarginDecoration(
+                verticalMargin = margin,
+                horizontalMargin = margin,
+                columnProvider = columnProvider,
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+
+        @JvmStatic
+        fun createVertical(
+            @Px verticalMargin: Int,
+            columnProvider: ColumnProvider,
+            orientation: Int = RecyclerView.VERTICAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): GridMarginDecoration {
+            return GridMarginDecoration(
+                verticalMargin = verticalMargin,
+                horizontalMargin = 0,
+                columnProvider = columnProvider,
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+
+        @JvmStatic
+        fun createHorizontal(
+            @Px horizontalMargin: Int,
+            columnProvider: ColumnProvider,
+            orientation: Int = RecyclerView.VERTICAL,
+            inverted: Boolean = false,
+            decorationLookup: DecorationLookup? = null
+        ): GridMarginDecoration {
+            return GridMarginDecoration(
+                horizontalMargin = horizontalMargin,
+                verticalMargin = 0,
+                columnProvider = columnProvider,
+                orientation = orientation,
+                inverted = inverted,
+                decorationLookup = decorationLookup
+            )
+        }
+    }
+
+    fun getHorizontalMargin() = horizontalMargin
+
+    fun getVerticalMargin() = verticalMargin
 
     fun getOrientation() = orientation
 
     fun isInverted() = inverted
 
     /**
-     * @param margin padding to be applied to all sides of an item
+     * @param margin margin to be applied to all sides of an item
      */
     fun setMargin(margin: Int) {
-        this.margin = margin
+        this.horizontalMargin = margin
+        this.verticalMargin = margin
+    }
+
+    fun setHorizontalMargin(margin: Int) {
+        this.horizontalMargin = margin
+    }
+
+    fun setVerticalMargin(margin: Int) {
+        this.verticalMargin = margin
     }
 
     /**
@@ -122,38 +196,38 @@ class GridMarginDecoration(
         lines: Int,
         lineIndex: Int
     ) {
-        val startPadding = margin * ((columns - columnIndex) / columns.toFloat())
-        val endPadding = margin * ((columnIndex + 1) / columns.toFloat())
+        val startPadding = horizontalMargin * ((columns - columnIndex) / columns.toFloat())
+        val endPadding = horizontalMargin * ((columnIndex + 1) / columns.toFloat())
         outRect.left = startPadding.toInt()
         outRect.right = endPadding.toInt()
 
         if (lineIndex == 0) {
             if (!inverted) {
-                outRect.top = margin
+                outRect.top = verticalMargin
                 if (lines > 1) {
-                    outRect.bottom = margin / 2
+                    outRect.bottom = verticalMargin / 2
                 } else {
-                    outRect.bottom = margin
+                    outRect.bottom = verticalMargin
                 }
             } else {
-                outRect.bottom = margin
+                outRect.bottom = verticalMargin
                 if (lines > 1) {
-                    outRect.top = margin / 2
+                    outRect.top = verticalMargin / 2
                 } else {
-                    outRect.top = margin
+                    outRect.top = verticalMargin
                 }
             }
         } else if (lineIndex == lines - 1) {
             if (!inverted) {
-                outRect.top = margin / 2
-                outRect.bottom = margin
+                outRect.top = verticalMargin / 2
+                outRect.bottom = verticalMargin
             } else {
-                outRect.top = margin
-                outRect.bottom = margin / 2
+                outRect.top = verticalMargin
+                outRect.bottom = verticalMargin / 2
             }
         } else {
-            outRect.top = margin / 2
-            outRect.bottom = margin / 2
+            outRect.top = verticalMargin / 2
+            outRect.bottom = verticalMargin / 2
         }
     }
 
@@ -164,39 +238,39 @@ class GridMarginDecoration(
         lines: Int,
         lineIndex: Int
     ) {
-        val startPadding = margin * ((columns - columnIndex) / columns.toFloat())
-        val endPadding = margin * ((columnIndex + 1) / columns.toFloat())
+        val startPadding = verticalMargin * ((columns - columnIndex) / columns.toFloat())
+        val endPadding = verticalMargin * ((columnIndex + 1) / columns.toFloat())
 
         outRect.top = startPadding.toInt()
         outRect.bottom = endPadding.toInt()
 
         if (lineIndex == 0) {
             if (!inverted) {
-                outRect.left = margin
+                outRect.left = horizontalMargin
                 if (lines > 1) {
-                    outRect.right = margin / 2
+                    outRect.right = horizontalMargin / 2
                 } else {
-                    outRect.right = margin
+                    outRect.right = horizontalMargin
                 }
             } else {
-                outRect.right = margin
+                outRect.right = horizontalMargin
                 if (lines > 1) {
-                    outRect.left = margin / 2
+                    outRect.left = horizontalMargin / 2
                 } else {
-                    outRect.left = margin
+                    outRect.left = horizontalMargin
                 }
             }
         } else if (lineIndex == lines - 1) {
             if (!inverted) {
-                outRect.left = margin / 2
-                outRect.right = margin
+                outRect.left = horizontalMargin / 2
+                outRect.right = horizontalMargin
             } else {
-                outRect.left = margin
-                outRect.right = margin / 2
+                outRect.left = horizontalMargin
+                outRect.right = horizontalMargin / 2
             }
         } else {
-            outRect.left = margin / 2
-            outRect.right = margin / 2
+            outRect.left = horizontalMargin / 2
+            outRect.right = horizontalMargin / 2
         }
     }
 

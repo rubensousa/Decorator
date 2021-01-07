@@ -28,12 +28,12 @@ class GridSpanDelegate(private val context: Context) : DecorationDelegate() {
         const val DEFAULT_COLUMNS = 4
     }
 
-    private var decoration = GridSpanMarginDecoration(
+    private var decoration = GridSpanMarginDecoration.createVertical(
         context.resources.dpToPx(getDefaultSizeDp()),
         GridLayoutManager(context, DEFAULT_COLUMNS)
     )
 
-    override fun getSize(): Int = decoration.getMargin()
+    override fun getSize(): Int = decoration.getHorizontalMargin()
 
     override fun createLayoutManager(context: Context): RecyclerView.LayoutManager {
         val layoutManager = GridLayoutManager(
@@ -71,5 +71,17 @@ class GridSpanDelegate(private val context: Context) : DecorationDelegate() {
         decoration.setMargin(size)
     }
 
+    override fun setVerticalMargin(margin: Int) {
+        decoration.setVerticalMargin(margin)
+    }
+
+    override fun setHorizontalMargin(margin: Int) {
+        decoration.setHorizontalMargin(margin)
+    }
+
     override fun getNumberOfItems(): Int = 31
+
+    override fun hasVerticalAndHorizontalMargin(): Boolean {
+        return true
+    }
 }

@@ -43,8 +43,6 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * Any property change should be followed by [RecyclerView.invalidateItemDecorations]
  *
- * Any property change in [margin] or [gridLayoutManager]
- * should be followed by [RecyclerView.invalidateItemDecorations]
  */
 class GridSpanBoundsMarginDecoration(
     @Px private var leftMargin: Int = 0,

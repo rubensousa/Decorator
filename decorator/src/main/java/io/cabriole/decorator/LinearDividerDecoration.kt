@@ -46,6 +46,10 @@ import androidx.recyclerview.widget.RecyclerView
  * @param inverted true if the LayoutManager is inverted and items are laid out
  * from the bottom to the top or from the right to the left. Default is false.
  *
+ * @param addBeforeFirstPosition true if the first item should have decoration applied
+ *
+ * @param addAfterLastPosition true if the last item should have decoration applied
+ *
  * @param decorationLookup an optional [DecorationLookup] to filter positions
  * that shouldn't have this decoration applied to
  *
@@ -60,6 +64,8 @@ class LinearDividerDecoration(
     @Px private var bottomMargin: Int = 0,
     private var orientation: Int = RecyclerView.VERTICAL,
     private var inverted: Boolean = false,
+    private var addBeforeFirstPosition: Boolean = false,
+    private var addAfterLastPosition: Boolean = false,
     private var decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
@@ -78,6 +84,8 @@ class LinearDividerDecoration(
             bottomMargin: Int = 0,
             orientation: Int = RecyclerView.VERTICAL,
             inverted: Boolean = false,
+            addBeforeFirstPosition: Boolean = false,
+            addAfterLastPosition: Boolean = false,
             decorationLookup: DecorationLookup? = null
         ): LinearDividerDecoration {
             val paint = Paint()
@@ -93,6 +101,8 @@ class LinearDividerDecoration(
                 bottomMargin,
                 orientation,
                 inverted,
+                addBeforeFirstPosition,
+                addAfterLastPosition,
                 decorationLookup
             )
         }
@@ -109,6 +119,16 @@ class LinearDividerDecoration(
     }
 
     fun getDividerSize() = size
+
+    fun setHorizontalMargin(margin: Int) {
+        leftMargin = margin
+        rightMargin = margin
+    }
+
+    fun setVerticalMargin(margin: Int) {
+        topMargin = margin
+        bottomMargin = margin
+    }
 
     fun setMargin(left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
         leftMargin = left
@@ -137,6 +157,20 @@ class LinearDividerDecoration(
      */
     fun setInverted(inverted: Boolean) {
         this.inverted = inverted
+    }
+
+    /**
+     * @param enable - true if the first item should have a divider before it, or false otherwise
+     */
+    fun enableBeforeFirstPosition(enable: Boolean) {
+        addBeforeFirstPosition = enable
+    }
+
+    /**
+     * @param enable - true if the last item should have a divider after it, or false otherwise
+     */
+    fun enableAfterLastPosition(enable: Boolean) {
+        addAfterLastPosition = enable
     }
 
     fun isInverted() = inverted
@@ -179,7 +213,6 @@ class LinearDividerDecoration(
                     drawHorizontal(c, child, adapterPosition, itemCount, layoutManager)
                 }
             }
-
         }
     }
 
@@ -190,46 +223,48 @@ class LinearDividerDecoration(
         if (decorationLookup == null) {
             return true
         }
-
         return decorationLookup!!.shouldApplyDecoration(position, itemCount)
     }
 
     private fun applyVerticalOffsets(outRect: Rect, position: Int, itemCount: Int) {
+        // Add space for the divider from the bottom if not inverted
         if (!inverted) {
-            if (position != 0 && shouldApplyDecorationAt(position - 1, itemCount)) {
-                outRect.top = size / 2 + topMargin
-            }
-            if (position != itemCount - 1 && shouldApplyDecorationAt(position + 1, itemCount)) {
-                outRect.bottom = size / 2 + bottomMargin
-            }
+            outRect.bottom = size + bottomMargin + topMargin
         } else {
-            if (position != 0 && shouldApplyDecorationAt(position - 1, itemCount)) {
-                outRect.bottom = size / 2 + bottomMargin
+            outRect.top = size + bottomMargin + topMargin
+        }
+
+        // If we're at the first position, check if we need to add an extra decoration
+        if (position == 0 && addBeforeFirstPosition) {
+            if (!inverted) {
+                outRect.top = bottomMargin + size
+            } else {
+                outRect.bottom = topMargin + size
             }
-            if (position != itemCount - 1 && shouldApplyDecorationAt(position + 1, itemCount)) {
-                outRect.top = size / 2 + topMargin
+        }
+
+        // If we're at the last position, check if we need to add an extra decoration
+        if (position == itemCount - 1) {
+            if (addAfterLastPosition) {
+                if (!inverted) {
+                    outRect.bottom = topMargin + size
+                } else {
+                    outRect.top = bottomMargin + size
+                }
+            } else {
+                // Reset offsets since we don't want a divider here
+                if (!inverted) {
+                    outRect.bottom = 0
+                } else {
+                    outRect.top = 0
+                }
             }
         }
     }
 
-    private fun applyHorizontalOffsets(outRect: Rect, position: Int, itemCount: Int) {
-        if (!inverted) {
-            if (position != 0 && shouldApplyDecorationAt(position - 1, itemCount)) {
-                outRect.left = size / 2 + leftMargin
-            }
-            if (position != itemCount - 1 && shouldApplyDecorationAt(position + 1, itemCount)) {
-                outRect.right = size / 2 + rightMargin
-            }
-        } else {
-            if (position != 0 && shouldApplyDecorationAt(position - 1, itemCount)) {
-                outRect.right = size / 2 + rightMargin
-            }
-            if (position != itemCount - 1 && shouldApplyDecorationAt(position + 1, itemCount)) {
-                outRect.left = size / 2 + leftMargin
-            }
-        }
-    }
-
+    /**
+     * Divider is drawn on bottom of item if [inverted] is false, or on top if [inverted] is true
+     */
     private fun drawVertical(
         canvas: Canvas,
         view: View,
@@ -237,38 +272,98 @@ class LinearDividerDecoration(
         itemCount: Int,
         layoutManager: RecyclerView.LayoutManager
     ) {
-        val topPosition = if (!inverted) {
-            position - 1
-        } else {
-            position + 1
-        }
-        // Draw half of the top decoration
-        if (shouldApplyDecorationAt(topPosition, itemCount)) {
-            // Real left = decoratedLeft + dividerSize/2 + leftMargin
-            // Real bottom = decoratedBottom - dividerSize/2 - bottomMargin
-            canvas.drawRect(
-                layoutManager.getDecoratedLeft(view).toFloat() + leftMargin,
-                layoutManager.getDecoratedTop(view).toFloat(),
-                layoutManager.getDecoratedRight(view).toFloat() - rightMargin,
-                layoutManager.getDecoratedTop(view).toFloat() + size / 2,
-                paint
-            )
+        if (position == 0 && addBeforeFirstPosition) {
+            if (!inverted) {
+                drawVerticalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedTop(view).toFloat(),
+                    layoutManager.getDecoratedTop(view).toFloat() + size
+                )
+            } else {
+                drawVerticalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedBottom(view).toFloat() - size,
+                    layoutManager.getDecoratedBottom(view).toFloat()
+                )
+            }
         }
 
-        val bottomPosition = if (!inverted) {
-            position + 1
-        } else {
-            position - 1
+        if (position != itemCount - 1) {
+            if (!inverted) {
+                drawVerticalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedBottom(view).toFloat() - bottomMargin - size,
+                    layoutManager.getDecoratedBottom(view).toFloat() - bottomMargin
+                )
+            } else {
+                drawVerticalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedTop(view).toFloat() + topMargin,
+                    layoutManager.getDecoratedTop(view).toFloat() + topMargin + size
+                )
+            }
         }
-        // Draw half of the bottom decoration
-        if (shouldApplyDecorationAt(bottomPosition, itemCount)) {
-            canvas.drawRect(
-                layoutManager.getDecoratedLeft(view).toFloat() + leftMargin,
-                layoutManager.getDecoratedBottom(view).toFloat() - size / 2,
-                layoutManager.getDecoratedRight(view).toFloat() - rightMargin,
-                layoutManager.getDecoratedBottom(view).toFloat(),
-                paint
-            )
+
+        if (position == itemCount - 1 && addAfterLastPosition) {
+            if (!inverted) {
+                drawVerticalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedBottom(view).toFloat() - size,
+                    layoutManager.getDecoratedBottom(view).toFloat()
+                )
+            } else {
+                drawVerticalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedTop(view).toFloat(),
+                    layoutManager.getDecoratedTop(view).toFloat() + size
+                )
+            }
+        }
+
+    }
+
+    private fun drawVerticalDivider(
+        canvas: Canvas, view: View, layoutManager: RecyclerView.LayoutManager,
+        top: Float, bottom: Float
+    ) {
+        canvas.drawRect(
+            layoutManager.getDecoratedLeft(view).toFloat() + leftMargin,
+            top,
+            layoutManager.getDecoratedRight(view).toFloat() - rightMargin,
+            bottom,
+            paint
+        )
+    }
+
+    private fun applyHorizontalOffsets(outRect: Rect, position: Int, itemCount: Int) {
+        if (!inverted) {
+            outRect.right = size + leftMargin + rightMargin
+        } else {
+            outRect.left = size + leftMargin + rightMargin
+        }
+
+        if (position == 0 && addBeforeFirstPosition) {
+            if (!inverted) {
+                outRect.left = rightMargin + size
+            } else {
+                outRect.right = leftMargin + size
+            }
+        }
+
+        if (position == itemCount - 1) {
+            if (addAfterLastPosition) {
+                if (!inverted) {
+                    outRect.right = leftMargin + size
+                } else {
+                    outRect.left = rightMargin + size
+                }
+            } else {
+                if (!inverted) {
+                    outRect.right = 0
+                } else {
+                    outRect.left = 0
+                }
+            }
         }
     }
 
@@ -279,39 +374,67 @@ class LinearDividerDecoration(
         itemCount: Int,
         layoutManager: RecyclerView.LayoutManager
     ) {
-        val leftPosition = if (!inverted) {
-            position - 1
-        } else {
-            position + 1
-        }
-        // Draw half of the left decoration
-        if (shouldApplyDecorationAt(leftPosition, itemCount)) {
-            canvas.drawRect(
-                layoutManager.getDecoratedLeft(view).toFloat(),
-                layoutManager.getDecoratedTop(view).toFloat() + topMargin,
-                layoutManager.getDecoratedLeft(view).toFloat() + size / 2,
-                layoutManager.getDecoratedBottom(view).toFloat() - bottomMargin,
-                paint
-            )
-        }
-
-        val rightPosition = if (!inverted) {
-            position + 1
-        } else {
-            position - 1
+        if (position == 0 && addBeforeFirstPosition) {
+            if (!inverted) {
+                drawHorizontalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedLeft(view).toFloat(),
+                    layoutManager.getDecoratedLeft(view).toFloat() + size
+                )
+            } else {
+                drawHorizontalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedRight(view).toFloat() - size,
+                    layoutManager.getDecoratedRight(view).toFloat()
+                )
+            }
         }
 
-        // Draw half of the right decoration
-        if (shouldApplyDecorationAt(rightPosition, itemCount)) {
-            canvas.drawRect(
-                layoutManager.getDecoratedRight(view).toFloat() - size / 2,
-                layoutManager.getDecoratedTop(view).toFloat() + topMargin,
-                layoutManager.getDecoratedRight(view).toFloat(),
-                layoutManager.getDecoratedBottom(view).toFloat() - bottomMargin,
-                paint
-            )
+        if (position != itemCount - 1) {
+            if (!inverted) {
+                drawHorizontalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedRight(view).toFloat() - rightMargin - size,
+                    layoutManager.getDecoratedRight(view).toFloat() - rightMargin
+                )
+            } else {
+                drawHorizontalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedLeft(view).toFloat() + leftMargin,
+                    layoutManager.getDecoratedLeft(view).toFloat() + leftMargin + size
+                )
+            }
         }
 
+        if (position == itemCount - 1 && addAfterLastPosition) {
+            if (!inverted) {
+                drawHorizontalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedRight(view).toFloat() - size,
+                    layoutManager.getDecoratedRight(view).toFloat()
+                )
+            } else {
+                drawHorizontalDivider(
+                    canvas, view, layoutManager,
+                    layoutManager.getDecoratedLeft(view).toFloat(),
+                    layoutManager.getDecoratedLeft(view).toFloat() + size
+                )
+            }
+        }
+
+    }
+
+    private fun drawHorizontalDivider(
+        canvas: Canvas, view: View, layoutManager: RecyclerView.LayoutManager,
+        left: Float, right: Float
+    ) {
+        canvas.drawRect(
+            left,
+            layoutManager.getDecoratedTop(view).toFloat() + topMargin,
+            right,
+            layoutManager.getDecoratedBottom(view).toFloat() - bottomMargin,
+            paint
+        )
     }
 
 }
