@@ -84,8 +84,8 @@ class LinearDividerDecoration(
             bottomMargin: Int = 0,
             orientation: Int = RecyclerView.VERTICAL,
             inverted: Boolean = false,
-            addBeforeFirstPosition: Boolean = true,
-            addAfterLastPosition: Boolean = true,
+            addBeforeFirstPosition: Boolean = false,
+            addAfterLastPosition: Boolean = false,
             decorationLookup: DecorationLookup? = null
         ): LinearDividerDecoration {
             val paint = Paint()
