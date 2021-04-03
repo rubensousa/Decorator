@@ -9,7 +9,7 @@ Decorator is a library that helps creating composable margins and dividers in Re
 ## Install
 
 ```groovy
-implementation 'io.cabriole:decorator:1.3.0'
+implementation 'io.cabriole:decorator:x.x.x'
 ```
 
 Replace x.x.x with the latest version available

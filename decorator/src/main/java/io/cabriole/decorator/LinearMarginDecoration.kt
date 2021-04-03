@@ -221,34 +221,26 @@ class LinearMarginDecoration(
         if (position == 0) {
             if (!inverted) {
                 if (position == itemCount - 1) {
-                    if (addAfterLastPosition) {
-                        outRect.bottom = bottomMargin
-                    }
+                    outRect.bottom = getEdgeMargin(addAfterLastPosition, bottomMargin)
                 } else {
                     outRect.bottom = bottomMargin / 2
                 }
-                if (addBeforeFirstPosition) {
-                    outRect.top = topMargin
-                }
+                outRect.top = getEdgeMargin(addBeforeFirstPosition, topMargin)
             } else {
                 if (position == itemCount - 1) {
-                    if (addAfterLastPosition) {
-                        outRect.top = topMargin
-                    }
+                    outRect.top = getEdgeMargin(addAfterLastPosition, topMargin)
                 } else {
                     outRect.top = topMargin / 2
                 }
-                if (addBeforeFirstPosition) {
-                    outRect.bottom = bottomMargin
-                }
+                outRect.bottom = getEdgeMargin(addBeforeFirstPosition, bottomMargin)
             }
         } else if (position == itemCount - 1) {
             if (!inverted) {
                 outRect.top = topMargin / 2
-                outRect.bottom = bottomMargin
+                outRect.bottom = getEdgeMargin(addAfterLastPosition, bottomMargin)
             } else {
                 outRect.bottom = bottomMargin / 2
-                outRect.top = topMargin
+                outRect.top = getEdgeMargin(addAfterLastPosition, topMargin)
             }
         } else {
             outRect.top = topMargin / 2
@@ -261,32 +253,27 @@ class LinearMarginDecoration(
     private fun applyHorizontalOffsets(outRect: Rect, position: Int, itemCount: Int) {
         if (position == 0) {
             if (!inverted) {
-                if (addBeforeFirstPosition) {
-                    outRect.left = leftMargin
-                }
-                outRect.right = rightMargin / 2
-            } else {
-                if (addBeforeFirstPosition) {
-                    outRect.right = rightMargin
-                }
-                outRect.left = leftMargin / 2
-            }
-        }
-        if (position == itemCount - 1) {
-            if (!inverted) {
-                if (position != 0) {
-                    outRect.left = leftMargin / 2
-                }
-                if (addAfterLastPosition) {
-                    outRect.right = rightMargin
-                }
-            } else {
-                if (position != 0) {
+                if (position == itemCount - 1) {
+                    outRect.right = getEdgeMargin(addAfterLastPosition, rightMargin)
+                } else {
                     outRect.right = rightMargin / 2
                 }
-                if (addAfterLastPosition) {
-                    outRect.left = leftMargin
+                outRect.left = getEdgeMargin(addBeforeFirstPosition, leftMargin)
+            } else {
+                if (position == itemCount - 1) {
+                    outRect.left = getEdgeMargin(addAfterLastPosition, leftMargin)
+                } else {
+                    outRect.left = leftMargin / 2
                 }
+                outRect.right = getEdgeMargin(addBeforeFirstPosition, rightMargin)
+            }
+        } else if (position == itemCount - 1) {
+            if (!inverted) {
+                outRect.left = leftMargin / 2
+                outRect.right = getEdgeMargin(addAfterLastPosition, rightMargin)
+            } else {
+                outRect.right = rightMargin / 2
+                outRect.left = getEdgeMargin(addAfterLastPosition, leftMargin)
             }
         } else {
             outRect.left = leftMargin / 2
@@ -294,6 +281,14 @@ class LinearMarginDecoration(
         }
         outRect.top = topMargin
         outRect.bottom = bottomMargin
+    }
+
+    private fun getEdgeMargin(apply: Boolean, margin: Int): Int {
+        return if (apply) {
+            margin
+        } else {
+            0
+        }
     }
 
 }

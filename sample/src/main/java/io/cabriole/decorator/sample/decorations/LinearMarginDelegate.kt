@@ -25,7 +25,11 @@ import io.cabriole.decorator.sample.extensions.dpToPx
 
 class LinearMarginDelegate(private val resources: Resources) : DecorationDelegate() {
 
-    private var decoration = LinearMarginDecoration.create(resources.dpToPx(getDefaultSizeDp()))
+    private var decoration = LinearMarginDecoration.create(
+        resources.dpToPx(getDefaultSizeDp()),
+        addBeforeFirstPosition = false,
+        addAfterLastPosition = false
+    )
 
     override fun getSize(): Int = decoration.getTopMargin()
 
