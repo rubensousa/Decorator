@@ -9,7 +9,7 @@ Decorator is a library that helps creating composable margins and dividers in Re
 ## Install
 
 ```groovy
-implementation 'io.cabriole:decorator:x.x.x'
+implementation 'com.rubensousa:decorator:x.x.x'
 ```
 
 Replace x.x.x with the latest version available
@@ -188,7 +188,7 @@ decoration.setDecorationLookup(object : DecorationLookup {
 
 ## License
 
-    Copyright 2020 Cabriole
+    Copyright 2021 Rúben Sousa
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

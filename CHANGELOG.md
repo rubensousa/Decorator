@@ -1,3 +1,7 @@
+# 2.0.0
+
+Changed artifact to: com.rubensousa:decorator
+
 # 1.3.1
 
 #### LinearMarginDecoration
