@@ -1,3 +1,9 @@
+# 1.3.1
+
+#### LinearMarginDecoration
+
+- Fixed margins being applied incorrectly when `addBeforeFirstPosition` and `addAfterLastPosition` were set
+
 # 1.3.0
 
 #### New DecorationLookup defaults
