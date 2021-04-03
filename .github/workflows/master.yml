@@ -23,8 +23,6 @@ jobs:
       - name: Install Android SDK
         uses: malinskiy/action-android/install-sdk@release/0.1.0
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --stacktrace -Pbintray_user=${{ secrets.BINTRAY_USER }} -Pbintray_apikey=${{ secrets.BINTRAY_KEY }}
+        run: ./gradlew testDebugUnitTest --stacktrace
       - name: Assemble library
-        run: ./gradlew assembleRelease -Pbintray_user=${{ secrets.BINTRAY_USER }} -Pbintray_apikey=${{ secrets.BINTRAY_KEY }}
-      - name: Release library
-        run: ./gradlew bintrayUpload -Pbintray_user=${{ secrets.BINTRAY_USER }} -Pbintray_apikey=${{ secrets.BINTRAY_KEY }}
+        run: ./gradlew assembleRelease
