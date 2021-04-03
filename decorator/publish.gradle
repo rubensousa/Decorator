@@ -104,8 +104,7 @@ buildscript {
 }
 
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
-
+apply plugin: 'signing'
 
 def isDokkaAvailable = project.tasks.findByName('dokka')
 
@@ -114,6 +113,51 @@ def isDokkaAvailable = project.tasks.findByName('dokka')
 if (isDokkaAvailable) {
     apply plugin: 'org.jetbrains.dokka'
 }
+
+ext["signing.keyId"] = getSecretKeyId()
+ext["signing.password"] = getSecretKeyPassword()
+ext["signing.secretKeyRingFile"] = getSecretKeyRingFilePath()
+
+String getSecretKeyPassword() {
+    if (hasProperty("ossrhSecretKeyPassword")) {
+        return ossrhSecretKeyPassword
+    } else {
+        return ""
+    }
+}
+
+String getSecretKeyId() {
+    if (hasProperty("ossrhSecretKeyId")) {
+        return ossrhSecretKeyId
+    } else {
+        return ""
+    }
+}
+
+String getSecretKeyRingFilePath() {
+    if (hasProperty("ossrhSecretKeyRingFile")) {
+        return ossrhSecretKeyRingFile
+    } else {
+        return ""
+    }
+}
+
+String getSonatypeUsername() {
+    if (hasProperty("ossrhUsername")) {
+        return ossrhUsername
+    } else {
+        return ""
+    }
+}
+
+String getSonatypePassword() {
+    if (hasProperty("ossrhPassword")) {
+        return ossrhPassword
+    } else {
+        return ""
+    }
+}
+
 
 afterEvaluate { project ->
 
@@ -211,6 +255,17 @@ afterEvaluate { project ->
                 configurePom(pom)
             }
         }
+        repositories {
+            maven {
+                name = "sonatype"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+
+                credentials {
+                    username getSonatypeUsername()
+                    password getSonatypePassword()
+                }
+            }
+        }
     }
 }
 
@@ -242,13 +297,10 @@ def configurePom(pom) {
         developerConnection = POM_SCM_DEV_CONNECTION
     }
 
-    if (hasProperty('POM_LICENSE_NAME')) {
-        pom.licenses {
-            license {
-                name = POM_LICENSE_NAME
-                url = POM_LICENSE_URL
-                distribution = POM_LICENSE_DIST
-            }
+    pom.licenses {
+        license {
+            name = "The Apache Software License, Version 2.0"
+            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
         }
     }
 
@@ -263,24 +315,6 @@ def configurePom(pom) {
 group LIBRARY_GROUP
 version LIBRARY_VERSION
 
-bintray {
-    user = bintray_user
-    key = bintray_apikey
-    publications = ['release']
-    pkg {
-        repo = 'maven'
-        name = LIBRARY_ARTIFACT
-        desc = POM_DESCRIPTION
-        userOrg = 'cabriole'
-        description = POM_DESCRIPTION
-        publish = true
-        publicDownloadNumbers = true
-        licenses = POM_LICENSES.split(",")
-        vcsUrl = POM_VCS_URL
-        version {
-            name = this.version
-            released = new Date()
-            vcsTag = this.version
-        }
-    }
+signing {
+    sign publishing.publications
 }

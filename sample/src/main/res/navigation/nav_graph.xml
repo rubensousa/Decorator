@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2020. Cabriole
+  ~ Copyright (c) 2021. Rúben Sousa
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/MainFragment"
-        android:name="io.cabriole.decorator.sample.MainFragment"
+        android:name="com.rubensousa.decorator.sample.MainFragment"
         android:label="@string/main_fragment_label"
         tools:layout="@layout/screen_options">
 
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/OptionFragment"
-        android:name="io.cabriole.decorator.sample.DecorationFragment"
+        android:name="com.rubensousa.decorator.sample.DecorationFragment"
         android:label="@string/option_fragment_label"
         tools:layout="@layout/screen_decoration">
 
