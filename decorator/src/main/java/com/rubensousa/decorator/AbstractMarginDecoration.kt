@@ -35,7 +35,7 @@ abstract class AbstractMarginDecoration(private val decorationLookup: Decoration
     ) {
         val lm = parent.layoutManager as RecyclerView.LayoutManager
         val layoutParams = view.layoutParams as RecyclerView.LayoutParams
-        val position = layoutParams.viewAdapterPosition
+        val position = layoutParams.absoluteAdapterPosition
         if (position != RecyclerView.NO_POSITION &&
             (decorationLookup == null ||
                     decorationLookup.shouldApplyDecoration(position, lm.itemCount))
