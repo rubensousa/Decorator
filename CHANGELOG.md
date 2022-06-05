@@ -1,3 +1,7 @@
+# 2.0.1
+
+- Added support for `ConcatAdapter`. `DecorationLookup` now receives the absolute adapter position.
+
 # 2.0.0
 
 Changed artifact to: com.rubensousa:decorator

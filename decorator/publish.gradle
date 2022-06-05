@@ -96,17 +96,17 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.10.1"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.6.21"
     }
 }
 
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-def isDokkaAvailable = project.tasks.findByName('dokka')
+def isDokkaAvailable = project.tasks.findByName('dokkaJavadoc')
 
 // Check if the project has dokka setup before trying to apply the plugin
 // If dokka isn't setup, javadocs won't be generated for kotlin files
@@ -168,14 +168,8 @@ afterEvaluate { project ->
 
         // If dokka is setup, generate the javadocs for kotlin files
         if (isDokkaAvailable) {
-            task dokkaJavadoc(type: dokka.class) {
-                outputFormat = 'javadoc'
-                outputDirectory = "$buildDir/javadoc"
-            }
-
-            task dokkaJavadocsJar(type: Jar, dependsOn: dokkaJavadoc) {
-                getArchiveClassifier().set('javadoc')
-                from dokkaJavadoc.outputDirectory
+            tasks.dokkaJavadoc.configure {
+                outputDirectory.set(file("$buildDir/javadoc"))
             }
         }
 
@@ -187,7 +181,11 @@ afterEvaluate { project ->
 
         task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
             getArchiveClassifier().set('javadoc')
-            from androidJavadocs.destinationDir
+            if (isDokkaAvailable) {
+                from dokkaJavadoc.outputDirectory
+            } else {
+                from androidJavadocs.destinationDir
+            }
         }
 
         if (JavaVersion.current().isJava8Compatible()) {
@@ -213,14 +211,8 @@ afterEvaluate { project ->
             }
         }
 
-        if (isDokkaAvailable) {
-            artifacts {
-                archives dokkaJavadocsJar
-            }
-        } else {
-            artifacts {
-                archives androidJavadocsJar
-            }
+        artifacts {
+            archives androidJavadocsJar
         }
     }
 
@@ -246,11 +238,7 @@ afterEvaluate { project ->
                     artifact androidSourcesJar
                 }
                 if (publishDocs) {
-                    if (isDokkaAvailable) {
-                        artifact dokkaJavadocsJar
-                    } else {
-                        artifact androidJavadocsJar
-                    }
+                    artifact androidJavadocsJar
                 }
                 configurePom(pom)
             }
