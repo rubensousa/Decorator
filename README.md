@@ -9,7 +9,7 @@ Decorator is a library that helps creating composable margins and dividers in Re
 ## Install
 
 ```groovy
-implementation 'com.rubensousa:decorator:2.0.1'
+implementation 'com.rubensousa:decorator:2.0.2'
 ```
 
 ## How to use

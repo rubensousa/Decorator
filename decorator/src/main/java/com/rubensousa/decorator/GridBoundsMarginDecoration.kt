@@ -53,7 +53,7 @@ class GridBoundsMarginDecoration(
     private var columnProvider: ColumnProvider,
     private var orientation: Int = RecyclerView.VERTICAL,
     private var inverted: Boolean = false,
-    private var decorationLookup: DecorationLookup? = null
+    decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
     companion object {
@@ -193,10 +193,6 @@ class GridBoundsMarginDecoration(
     }
 
     fun isInverted() = inverted
-
-    fun setDecorationLookup(decorationLookup: DecorationLookup?) {
-        this.decorationLookup = decorationLookup
-    }
 
     override fun getItemOffsets(
         outRect: Rect,
