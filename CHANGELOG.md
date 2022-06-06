@@ -1,3 +1,8 @@
+# 2.0.2
+
+- Moved `setDecorationLookup` to `AbstractMarginDecoration`
+- Added new `shouldApplyDecorationAt` to `AbstractMarginDecoration`
+
 # 2.0.1
 
 - Added support for `ConcatAdapter`. `DecorationLookup` now receives the absolute adapter position.
