@@ -66,7 +66,7 @@ class LinearDividerDecoration(
     private var inverted: Boolean = false,
     private var addBeforeFirstPosition: Boolean = false,
     private var addAfterLastPosition: Boolean = false,
-    private var decorationLookup: DecorationLookup? = null
+    decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
     companion object {
@@ -175,14 +175,6 @@ class LinearDividerDecoration(
 
     fun isInverted() = inverted
 
-    /**
-     * @param decorationLookup an optional [DecorationLookup] to filter positions
-     * that shouldn't have this decoration applied to
-     */
-    fun setDecorationLookup(decorationLookup: DecorationLookup?) {
-        this.decorationLookup = decorationLookup
-    }
-
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -214,16 +206,6 @@ class LinearDividerDecoration(
                 }
             }
         }
-    }
-
-    private fun shouldApplyDecorationAt(position: Int, itemCount: Int): Boolean {
-        if (position == RecyclerView.NO_POSITION) {
-            return false
-        }
-        if (decorationLookup == null) {
-            return true
-        }
-        return decorationLookup!!.shouldApplyDecoration(position, itemCount)
     }
 
     private fun applyVerticalOffsets(outRect: Rect, position: Int, itemCount: Int) {

@@ -50,7 +50,7 @@ class GridSpanBoundsMarginDecoration(
     @Px private var rightMargin: Int = 0,
     @Px private var bottomMargin: Int = 0,
     private var gridLayoutManager: GridLayoutManager,
-    private var decorationLookup: DecorationLookup? = null
+    decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
     fun setMargin(margin: Int) {
@@ -77,15 +77,6 @@ class GridSpanBoundsMarginDecoration(
     fun getRightMargin() = rightMargin
 
     fun getBottomMargin() = bottomMargin
-
-    /**
-     * @param decorationLookup an optional [DecorationLookup] to filter positions
-     * that shouldn't have this decoration applied to
-     */
-    fun setDecorationLookup(decorationLookup: DecorationLookup?) {
-        this.decorationLookup = decorationLookup
-    }
-
 
     override fun getItemOffsets(
         outRect: Rect,

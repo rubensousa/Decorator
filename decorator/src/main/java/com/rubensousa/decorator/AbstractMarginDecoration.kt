@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
  * A base [RecyclerView.ItemDecoration] that checks if item offsets should be applied
  * for a given position using [DecorationLookup]
  */
-abstract class AbstractMarginDecoration(private val decorationLookup: DecorationLookup?) :
+abstract class AbstractMarginDecoration(private var decorationLookup: DecorationLookup?) :
     RecyclerView.ItemDecoration() {
 
     final override fun getItemOffsets(
@@ -36,12 +36,29 @@ abstract class AbstractMarginDecoration(private val decorationLookup: Decoration
         val lm = parent.layoutManager as RecyclerView.LayoutManager
         val layoutParams = view.layoutParams as RecyclerView.LayoutParams
         val position = layoutParams.absoluteAdapterPosition
-        if (position != RecyclerView.NO_POSITION &&
-            (decorationLookup == null ||
-                    decorationLookup.shouldApplyDecoration(position, lm.itemCount))
-        ) {
+        if (shouldApplyDecorationAt(position, lm.itemCount)) {
             getItemOffsets(outRect, view, position, parent, state, lm)
         }
+    }
+
+    /**
+     * @param decorationLookup an optional [DecorationLookup] to filter positions
+     * that shouldn't have this decoration applied to
+     */
+    fun setDecorationLookup(decorationLookup: DecorationLookup?) {
+        this.decorationLookup = decorationLookup
+    }
+
+    /**
+     * @return true if decoration will be applied for [position]
+     * or false if position is not valid
+     * or [decorationLookup] doesn't allow decoration for this [position]
+     */
+    fun shouldApplyDecorationAt(position: Int, itemCount: Int): Boolean {
+        if (position == RecyclerView.NO_POSITION) {
+            return false
+        }
+        return decorationLookup?.shouldApplyDecoration(position, itemCount) ?: true
     }
 
     abstract fun getItemOffsets(

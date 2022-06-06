@@ -53,7 +53,7 @@ class GridDividerDecoration(
     private val columnProvider: ColumnProvider,
     private var orientation: Int = RecyclerView.VERTICAL,
     private var inverted: Boolean = false,
-    private var decorationLookup: DecorationLookup? = null
+    decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
     companion object {
@@ -125,14 +125,6 @@ class GridDividerDecoration(
 
     fun isInverted() = inverted
 
-    /**
-     * @param decorationLookup an optional [DecorationLookup] to filter positions
-     * that shouldn't have this decoration applied to
-     */
-    fun setDecorationLookup(decorationLookup: DecorationLookup?) {
-        this.decorationLookup = decorationLookup
-    }
-
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -158,25 +150,14 @@ class GridDividerDecoration(
         for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)
             val adapterPosition = parent.getChildAdapterPosition(child)
-            if (canApplyDecorationAt(adapterPosition, itemCount)) {
+            if (shouldApplyDecorationAt(adapterPosition, itemCount)) {
                 if (orientation == RecyclerView.VERTICAL) {
-                    drawVertical(c, child, adapterPosition, itemCount, columns, layoutManager)
+                    drawVertical(c, child, adapterPosition, itemCount, columns)
                 } else {
-                    drawHorizontal(c, child, adapterPosition, itemCount, columns, layoutManager)
+                    drawHorizontal(c, child, adapterPosition, itemCount, columns)
                 }
             }
         }
-    }
-
-    private fun canApplyDecorationAt(position: Int, itemCount: Int): Boolean {
-        if (position == RecyclerView.NO_POSITION) {
-            return false
-        }
-        if (decorationLookup == null) {
-            return true
-        }
-
-        return decorationLookup!!.shouldApplyDecoration(position, itemCount)
     }
 
     private fun applyVerticalOffsets(outRect: Rect, position: Int, columns: Int, itemCount: Int) {
@@ -297,15 +278,14 @@ class GridDividerDecoration(
         view: View,
         position: Int,
         itemCount: Int,
-        columns: Int,
-        layoutManager: RecyclerView.LayoutManager
+        columns: Int
     ) {
         val bottomPosition = if (!inverted) {
             getBottomPosition(position, columns, itemCount)
         } else {
             getTopPosition(position, columns)
         }
-        if (bottomPosition != null && canApplyDecorationAt(bottomPosition, itemCount)) {
+        if (bottomPosition != null && shouldApplyDecorationAt(bottomPosition, itemCount)) {
             canvas.drawRect(
                 view.left.toFloat() + heightMargin,
                 view.bottom.toFloat() + widthMargin,
@@ -316,7 +296,7 @@ class GridDividerDecoration(
         }
 
         val rightPosition = getRightPosition(position, columns, itemCount)
-        if (rightPosition != null && canApplyDecorationAt(rightPosition, itemCount)) {
+        if (rightPosition != null && shouldApplyDecorationAt(rightPosition, itemCount)) {
             canvas.drawRect(
                 view.right.toFloat() + widthMargin,
                 view.top.toFloat() + heightMargin,
@@ -332,15 +312,14 @@ class GridDividerDecoration(
         view: View,
         position: Int,
         itemCount: Int,
-        columns: Int,
-        layoutManager: RecyclerView.LayoutManager
+        columns: Int
     ) {
         val bottomPosition = if (!inverted) {
             getBottomPosition(position, columns, itemCount)
         } else {
             getTopPosition(position, columns)
         }
-        if (bottomPosition != null && canApplyDecorationAt(bottomPosition, itemCount)) {
+        if (bottomPosition != null && shouldApplyDecorationAt(bottomPosition, itemCount)) {
             canvas.drawRect(
                 view.right.toFloat() + widthMargin,
                 view.top.toFloat() + heightMargin,
@@ -351,7 +330,7 @@ class GridDividerDecoration(
         }
 
         val rightPosition = getRightPosition(position, columns, itemCount)
-        if (rightPosition != null && canApplyDecorationAt(rightPosition, itemCount)) {
+        if (rightPosition != null && shouldApplyDecorationAt(rightPosition, itemCount)) {
             canvas.drawRect(
                 view.left.toFloat() + heightMargin,
                 view.bottom.toFloat() + widthMargin,

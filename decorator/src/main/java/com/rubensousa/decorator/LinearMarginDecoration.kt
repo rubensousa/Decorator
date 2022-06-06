@@ -52,7 +52,7 @@ class LinearMarginDecoration(
     private var inverted: Boolean = false,
     private var addBeforeFirstPosition: Boolean = true,
     private var addAfterLastPosition: Boolean = true,
-    private var decorationLookup: DecorationLookup? = null
+    decorationLookup: DecorationLookup? = null
 ) : AbstractMarginDecoration(decorationLookup) {
 
     companion object {
@@ -191,14 +191,6 @@ class LinearMarginDecoration(
      */
     fun setInverted(inverted: Boolean) {
         this.inverted = inverted
-    }
-
-    /**
-     * @param decorationLookup an optional [DecorationLookup] to filter positions
-     * that shouldn't have this decoration applied to
-     */
-    fun setDecorationLookup(decorationLookup: DecorationLookup?) {
-        this.decorationLookup = decorationLookup
     }
 
     override fun getItemOffsets(
