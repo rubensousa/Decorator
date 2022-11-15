@@ -212,31 +212,32 @@ class LinearMarginDecoration(
     private fun applyVerticalOffsets(outRect: Rect, position: Int, itemCount: Int) {
         if (position == 0) {
             if (!inverted) {
-                if (position == itemCount - 1) {
+                if (itemCount - 1 == 0) {
                     outRect.bottom = getEdgeMargin(addAfterLastPosition, bottomMargin)
                 } else {
-                    outRect.bottom = bottomMargin / 2
+                    outRect.bottom = bottomMargin
                 }
                 outRect.top = getEdgeMargin(addBeforeFirstPosition, topMargin)
             } else {
-                if (position == itemCount - 1) {
+                if (itemCount - 1 == 0) {
                     outRect.top = getEdgeMargin(addAfterLastPosition, topMargin)
                 } else {
-                    outRect.top = topMargin / 2
+                    outRect.top = topMargin
                 }
                 outRect.bottom = getEdgeMargin(addBeforeFirstPosition, bottomMargin)
             }
         } else if (position == itemCount - 1) {
             if (!inverted) {
-                outRect.top = topMargin / 2
                 outRect.bottom = getEdgeMargin(addAfterLastPosition, bottomMargin)
             } else {
-                outRect.bottom = bottomMargin / 2
                 outRect.top = getEdgeMargin(addAfterLastPosition, topMargin)
             }
         } else {
-            outRect.top = topMargin / 2
-            outRect.bottom = bottomMargin / 2
+            if (inverted) {
+                outRect.top = topMargin
+            } else {
+                outRect.bottom = bottomMargin
+            }
         }
         outRect.left = leftMargin
         outRect.right = rightMargin
@@ -245,31 +246,32 @@ class LinearMarginDecoration(
     private fun applyHorizontalOffsets(outRect: Rect, position: Int, itemCount: Int) {
         if (position == 0) {
             if (!inverted) {
-                if (position == itemCount - 1) {
+                if (itemCount - 1 == 0) {
                     outRect.right = getEdgeMargin(addAfterLastPosition, rightMargin)
                 } else {
-                    outRect.right = rightMargin / 2
+                    outRect.right = rightMargin
                 }
                 outRect.left = getEdgeMargin(addBeforeFirstPosition, leftMargin)
             } else {
-                if (position == itemCount - 1) {
+                if (itemCount - 1 == 0) {
                     outRect.left = getEdgeMargin(addAfterLastPosition, leftMargin)
                 } else {
-                    outRect.left = leftMargin / 2
+                    outRect.left = leftMargin
                 }
                 outRect.right = getEdgeMargin(addBeforeFirstPosition, rightMargin)
             }
         } else if (position == itemCount - 1) {
             if (!inverted) {
-                outRect.left = leftMargin / 2
                 outRect.right = getEdgeMargin(addAfterLastPosition, rightMargin)
             } else {
-                outRect.right = rightMargin / 2
                 outRect.left = getEdgeMargin(addAfterLastPosition, leftMargin)
             }
         } else {
-            outRect.left = leftMargin / 2
-            outRect.right = rightMargin / 2
+            if (inverted) {
+                outRect.left = leftMargin
+            } else {
+                outRect.right = rightMargin
+            }
         }
         outRect.top = topMargin
         outRect.bottom = bottomMargin
