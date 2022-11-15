@@ -15,38 +15,6 @@
  */
 
 /*
- * BSD 3-Clause License
- *
- * Copyright (c) 2019, Sky Italia
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * * Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from
- *   this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
  * Copyright 2020 Rúben Sousa
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -93,26 +61,8 @@
  * POM_LICENCE_URL=http://www.apache.org/licenses/LICENSE-2.0.txt
  * POM_LICENCE_DIST=repo
  */
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.6.21"
-    }
-}
-
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-
-def isDokkaAvailable = project.tasks.findByName('dokkaJavadoc')
-
-// Check if the project has dokka setup before trying to apply the plugin
-// If dokka isn't setup, javadocs won't be generated for kotlin files
-if (isDokkaAvailable) {
-    apply plugin: 'org.jetbrains.dokka'
-}
 
 ext["signing.keyId"] = getSecretKeyId()
 ext["signing.password"] = getSecretKeyPassword()
@@ -158,75 +108,7 @@ String getSonatypePassword() {
     }
 }
 
-
 afterEvaluate { project ->
-
-    def publishSources = shouldPublishSources()
-    def publishDocs = shouldPublishDocs()
-
-    if (publishDocs) {
-
-        // If dokka is setup, generate the javadocs for kotlin files
-        if (isDokkaAvailable) {
-            tasks.dokkaJavadoc.configure {
-                outputDirectory.set(file("$buildDir/javadoc"))
-            }
-        }
-
-        task androidJavadocs(type: Javadoc) {
-            source = android.sourceSets.main.java.source
-            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-            excludes = ['**/*.kt']
-        }
-
-        task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-            getArchiveClassifier().set('javadoc')
-            if (isDokkaAvailable) {
-                from dokkaJavadoc.outputDirectory
-            } else {
-                from androidJavadocs.destinationDir
-            }
-        }
-
-        if (JavaVersion.current().isJava8Compatible()) {
-            allprojects {
-                tasks.withType(Javadoc) {
-                    options.addStringOption('Xdoclint:none', '-quiet')
-                }
-            }
-        }
-
-        if (JavaVersion.current().isJava9Compatible()) {
-            allprojects {
-                tasks.withType(Javadoc) {
-                    options.addBooleanOption('html5', true)
-                }
-            }
-        }
-
-        android.libraryVariants.all { variant ->
-            tasks.androidJavadocs.doFirst {
-                classpath += files(variant.javaCompileProvider.get().classpath.files
-                        .join(File.pathSeparator))
-            }
-        }
-
-        artifacts {
-            archives androidJavadocsJar
-        }
-    }
-
-    if (publishSources) {
-        task androidSourcesJar(type: Jar) {
-            getArchiveClassifier().set('sources')
-            from android.sourceSets.main.java.source
-        }
-
-        artifacts {
-            archives androidSourcesJar
-        }
-    }
-
     publishing {
         publications {
             release(MavenPublication) {
@@ -234,12 +116,6 @@ afterEvaluate { project ->
                 groupId LIBRARY_GROUP
                 version LIBRARY_VERSION
                 artifactId LIBRARY_ARTIFACT
-                if (publishSources) {
-                    artifact androidSourcesJar
-                }
-                if (publishDocs) {
-                    artifact androidJavadocsJar
-                }
                 configurePom(pom)
             }
         }
@@ -254,22 +130,6 @@ afterEvaluate { project ->
                 }
             }
         }
-    }
-}
-
-def shouldPublishSources() {
-    if (hasProperty("LIBRARY_PUBLISH_SOURCES")) {
-        return LIBRARY_PUBLISH_SOURCES == "true"
-    } else {
-        return true
-    }
-}
-
-def shouldPublishDocs() {
-    if (hasProperty("LIBRARY_PUBLISH_DOCS")) {
-        return LIBRARY_PUBLISH_DOCS == "true"
-    } else {
-        return true
     }
 }
 

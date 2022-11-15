@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 interface DecorationLookup {
 
     /**
-     * @param viewHolder the ViewHolder
+     * @param viewHolder the ViewHolder currently in layout
      *
      * @param itemCount the item count at the layout stage. See [RecyclerView.State.getItemCount]
      *
