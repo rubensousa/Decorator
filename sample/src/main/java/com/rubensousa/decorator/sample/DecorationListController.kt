@@ -17,6 +17,7 @@
 package com.rubensousa.decorator.sample
 
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.rubensousa.decorator.sample.adapter.CardAdapter
@@ -105,10 +106,18 @@ class DecorationListController(
             R.layout.list_card_horizontal
         }
 
-        val adapter = CardAdapter(recyclerView!!, layoutId)
+        val adapter = ConcatAdapter(
+            CardAdapter(
+                recyclerView!!,
+                layoutId
+            ).also { it.setItems(getDelegate().getNumberOfItems() / 2) },
+            CardAdapter(
+                recyclerView!!,
+                layoutId
+            ).also { it.setItems(getDelegate().getNumberOfItems() / 2) },
+        )
         recyclerView?.layoutManager = delegate.createLayoutManager(fragment.requireActivity())
         recyclerView?.adapter = adapter
-        adapter.setItems(getDelegate().getNumberOfItems())
         recyclerView?.invalidateItemDecorations()
     }
 

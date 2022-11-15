@@ -44,7 +44,13 @@ class CardAdapter(
                 if (position in 0 until itemCount) {
                     items.removeAt(position)
                     notifyItemRemoved(position)
-                    recyclerView.invalidateItemDecorations()
+                    // Make sure the item decorations are still applied
+                    // after the remove animation is done
+                    recyclerView.post {
+                        recyclerView.itemAnimator?.isRunning {
+                            recyclerView.invalidateItemDecorations()
+                        }
+                    }
                 }
             }
         }
