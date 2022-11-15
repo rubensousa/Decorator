@@ -16,31 +16,20 @@
 
 package com.rubensousa.decorator.sample.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rubensousa.decorator.sample.R
 import com.rubensousa.decorator.sample.model.CardModel
 
-class CardAdapter(private val layoutId: Int = R.layout.list_card) :
-    ListAdapter<CardModel, CardAdapter.VH>(DIFF_CALLBACK) {
+class CardAdapter(
+    private val recyclerView: RecyclerView,
+    private val layoutId: Int = R.layout.list_card
+) : RecyclerView.Adapter<CardAdapter.VH>() {
 
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CardModel>() {
-
-            override fun areItemsTheSame(oldItem: CardModel, newItem: CardModel): Boolean {
-                return oldItem.getId() == newItem.getId()
-            }
-
-            override fun areContentsTheSame(oldItem: CardModel, newItem: CardModel): Boolean {
-                return oldItem.equals(newItem)
-            }
-
-        }
-    }
+    private val items = ArrayList<CardModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return VH(
@@ -49,18 +38,29 @@ class CardAdapter(private val layoutId: Int = R.layout.list_card) :
                 parent,
                 false
             )
-        )
-    }
-
-    override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.bind(getItem(position))
-    }
-
-    class VH(view: View) : RecyclerView.ViewHolder(view) {
-
-        fun bind(item: CardModel) {
-
+        ).also { viewHolder ->
+            viewHolder.itemView.setOnClickListener {
+                val position = viewHolder.bindingAdapterPosition
+                if (position in 0 until itemCount) {
+                    items.removeAt(position)
+                    notifyItemRemoved(position)
+                    recyclerView.invalidateItemDecorations()
+                }
+            }
         }
-
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setItems(numberOfItems: Int) {
+        repeat(numberOfItems) { id ->
+            items.add(CardModel(id))
+        }
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    override fun onBindViewHolder(holder: VH, position: Int) {}
+
+    class VH(view: View) : RecyclerView.ViewHolder(view)
 }

@@ -17,11 +17,18 @@
 package com.rubensousa.decorator.sample
 
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
-import com.rubensousa.decorator.sample.R
 import com.rubensousa.decorator.sample.adapter.CardAdapter
-import com.rubensousa.decorator.sample.decorations.*
-import com.rubensousa.decorator.sample.model.CardModel
+import com.rubensousa.decorator.sample.decorations.DecorationDelegate
+import com.rubensousa.decorator.sample.decorations.GridBoundsDelegate
+import com.rubensousa.decorator.sample.decorations.GridDividerDelegate
+import com.rubensousa.decorator.sample.decorations.GridMarginDelegate
+import com.rubensousa.decorator.sample.decorations.GridSpanBoundsDelegate
+import com.rubensousa.decorator.sample.decorations.GridSpanDelegate
+import com.rubensousa.decorator.sample.decorations.LinearBoundsDelegate
+import com.rubensousa.decorator.sample.decorations.LinearDividerDelegate
+import com.rubensousa.decorator.sample.decorations.LinearMarginDelegate
 
 class DecorationListController(
     private val fragment: Fragment,
@@ -29,7 +36,6 @@ class DecorationListController(
 ) {
 
     private val decorations = mutableMapOf<Int, DecorationDelegate>()
-    private var adapter = CardAdapter(R.layout.list_card)
     private var recyclerView: RecyclerView? = null
 
     init {
@@ -61,15 +67,18 @@ class DecorationListController(
 
     fun setup(recyclerView: RecyclerView) {
         val delegate = getDelegate()
+        val itemAnimator = recyclerView.itemAnimator as DefaultItemAnimator
+        itemAnimator.removeDuration = 3000
         recyclerView.layoutManager = delegate.createLayoutManager(fragment.requireActivity())
         val decorations = delegate.getExtraDecorations()
         recyclerView.addItemDecoration(delegate.getDecoration())
         decorations.forEach { decoration ->
             recyclerView.addItemDecoration(decoration)
         }
+        val adapter = CardAdapter(recyclerView, R.layout.list_card)
         recyclerView.adapter = adapter
         this.recyclerView = recyclerView
-        createItems()
+        adapter.setItems(getDelegate().getNumberOfItems())
     }
 
     fun setInverted(inverted: Boolean) {
@@ -96,10 +105,10 @@ class DecorationListController(
             R.layout.list_card_horizontal
         }
 
-        adapter = CardAdapter(layoutId)
+        val adapter = CardAdapter(recyclerView!!, layoutId)
         recyclerView?.layoutManager = delegate.createLayoutManager(fragment.requireActivity())
         recyclerView?.adapter = adapter
-        createItems()
+        adapter.setItems(getDelegate().getNumberOfItems())
         recyclerView?.invalidateItemDecorations()
     }
 
@@ -116,19 +125,6 @@ class DecorationListController(
     fun setHeightMargin(margin: Int) {
         getDelegate().setVerticalMargin(margin)
         recyclerView?.invalidateItemDecorations()
-    }
-
-    private fun createItems() {
-        val items = arrayListOf<CardModel>()
-        val numberOfItems = getDelegate().getNumberOfItems()
-        repeat(numberOfItems) { id ->
-            items.add(CardModel(id))
-        }
-        submitList(items)
-    }
-
-    private fun submitList(list: List<CardModel>) {
-        adapter.submitList(list)
     }
 
     fun onDestroyView() {

@@ -26,7 +26,7 @@ import com.rubensousa.decorator.sample.extensions.dpToPx
 class LinearMarginDelegate(private val resources: Resources) : DecorationDelegate() {
 
     private var decoration = LinearMarginDecoration.create(
-        resources.dpToPx(getDefaultSizeDp()),
+        margin = resources.dpToPx(getDefaultSizeDp()),
         addBeforeFirstPosition = false,
         addAfterLastPosition = false
     )
