@@ -19,6 +19,7 @@ package com.rubensousa.decorator
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 /**
  * A base [RecyclerView.ItemDecoration] that checks if item offsets should be applied
@@ -33,11 +34,18 @@ abstract class AbstractMarginDecoration(private var decorationLookup: Decoration
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val lm = parent.layoutManager as RecyclerView.LayoutManager
         val layoutParams = view.layoutParams as RecyclerView.LayoutParams
-        val position = layoutParams.absoluteAdapterPosition
-        if (shouldApplyDecorationAt(position, lm.itemCount)) {
-            getItemOffsets(outRect, view, position, parent, state, lm)
+
+        /**
+         *  We need to use the layout position since it's the only valid
+         *  source of truth at this stage.
+         *  The item could've been removed and adapter position
+         *  in that case is set to RecyclerView.NO_POSITION
+         */
+        val position = layoutParams.viewLayoutPosition
+        val viewHolder = parent.getChildViewHolder(view)
+        if (shouldApplyDecorationAt(viewHolder, state.itemCount)) {
+            getItemOffsets(outRect, view, position, parent, state)
         }
     }
 
@@ -50,15 +58,11 @@ abstract class AbstractMarginDecoration(private var decorationLookup: Decoration
     }
 
     /**
-     * @return true if decoration will be applied for [position]
-     * or false if position is not valid
-     * or [decorationLookup] doesn't allow decoration for this [position]
+     * @return true if decoration will be applied for [viewHolder]
+     * or false if[decorationLookup] doesn't allow decoration for this [viewHolder]
      */
-    fun shouldApplyDecorationAt(position: Int, itemCount: Int): Boolean {
-        if (position == RecyclerView.NO_POSITION) {
-            return false
-        }
-        return decorationLookup?.shouldApplyDecoration(position, itemCount) ?: true
+    fun shouldApplyDecorationAt(viewHolder: ViewHolder, itemCount: Int): Boolean {
+        return decorationLookup?.shouldApplyDecoration(viewHolder, itemCount) ?: true
     }
 
     abstract fun getItemOffsets(
@@ -66,8 +70,7 @@ abstract class AbstractMarginDecoration(private var decorationLookup: Decoration
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     )
 
 }

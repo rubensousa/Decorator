@@ -180,29 +180,29 @@ class LinearDividerDecoration(
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     ) {
-        val itemCount = layoutManager.itemCount
         if (orientation == RecyclerView.VERTICAL) {
-            applyVerticalOffsets(outRect, position, itemCount)
+            applyVerticalOffsets(outRect, position, state.itemCount)
         } else {
-            applyHorizontalOffsets(outRect, position, itemCount)
+            applyHorizontalOffsets(outRect, position, state.itemCount)
         }
     }
 
-    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        super.onDraw(c, parent, state)
+    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        super.onDraw(canvas, parent, state)
         val layoutManager = parent.layoutManager ?: return
         val itemCount = layoutManager.itemCount
         for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)
-            val adapterPosition = parent.getChildAdapterPosition(child)
-            if (shouldApplyDecorationAt(adapterPosition, itemCount)) {
+            val layoutParams = child.layoutParams as RecyclerView.LayoutParams
+            val position = layoutParams.viewLayoutPosition
+            val viewHolder = parent.getChildViewHolder(child)
+            if (shouldApplyDecorationAt(viewHolder, itemCount)) {
                 if (orientation == RecyclerView.VERTICAL) {
-                    drawVertical(c, child, adapterPosition, itemCount, layoutManager)
+                    drawVertical(canvas, child, position, itemCount, layoutManager)
                 } else {
-                    drawHorizontal(c, child, adapterPosition, itemCount, layoutManager)
+                    drawHorizontal(canvas, child, position, itemCount, layoutManager)
                 }
             }
         }

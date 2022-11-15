@@ -160,14 +160,12 @@ class LinearBoundsMarginDecoration(
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     ) {
-        val itemCount = layoutManager.itemCount
         if (orientation == RecyclerView.VERTICAL) {
-            applyVerticalOffsets(outRect, position, itemCount)
+            applyVerticalOffsets(outRect, position, state.itemCount)
         } else {
-            applyHorizontalOffsets(outRect, position, itemCount)
+            applyHorizontalOffsets(outRect, position, state.itemCount)
         }
     }
 

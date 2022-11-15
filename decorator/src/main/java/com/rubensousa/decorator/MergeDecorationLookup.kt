@@ -1,5 +1,7 @@
 package com.rubensousa.decorator
 
+import androidx.recyclerview.widget.RecyclerView
+
 /**
  * Allows combining multiple [DecorationLookup]
  */
@@ -20,9 +22,12 @@ class MergeDecorationLookup private constructor(private val delegates: List<Deco
 
     }
 
-    override fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean {
+    override fun shouldApplyDecoration(
+        viewHolder: RecyclerView.ViewHolder,
+        itemCount: Int
+    ): Boolean {
         delegates.forEach { delegate ->
-            if (!delegate.shouldApplyDecoration(position, itemCount)) {
+            if (!delegate.shouldApplyDecoration(viewHolder, itemCount)) {
                 return false
             }
         }

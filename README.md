@@ -9,7 +9,7 @@ Decorator is a library that helps creating composable margins and dividers in Re
 ## Install
 
 ```groovy
-implementation 'com.rubensousa:decorator:2.0.2'
+implementation 'com.rubensousa:decorator:2.1.0'
 ```
 
 ## How to use
@@ -175,12 +175,10 @@ You can also decide if an item at a given position should have a decoration appl
 ```kotlin
 
 decoration.setDecorationLookup(object : DecorationLookup {
-
     // Don't apply the decoration on position 4
-    override fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean {
-        return position != 4
+    override fun shouldApplyDecoration(viewHolder: RecyclerView.ViewHolder, itemCount: Int): Boolean {
+        return viewHolder.layoutPosition != 4
     }
-    
 })
 ```
 

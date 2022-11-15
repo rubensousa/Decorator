@@ -130,31 +130,30 @@ class GridDividerDecoration(
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     ) {
         val columns = columnProvider.getNumberOfColumns()
-        val itemCount = layoutManager.itemCount
         if (orientation == RecyclerView.VERTICAL) {
-            applyVerticalOffsets(outRect, position, columns, itemCount)
+            applyVerticalOffsets(outRect, position, columns, state.itemCount)
         } else {
-            applyHorizontalOffsets(outRect, position, columns, itemCount)
+            applyHorizontalOffsets(outRect, position, columns, state.itemCount)
         }
     }
 
-    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        super.onDraw(c, parent, state)
-        val layoutManager = parent.layoutManager ?: return
+    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        super.onDraw(canvas, parent, state)
         val columns = columnProvider.getNumberOfColumns()
-        val itemCount = layoutManager.itemCount
+        val itemCount = state.itemCount
         for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)
-            val adapterPosition = parent.getChildAdapterPosition(child)
-            if (shouldApplyDecorationAt(adapterPosition, itemCount)) {
+            val layoutParams = child.layoutParams as RecyclerView.LayoutParams
+            val position = layoutParams.viewLayoutPosition
+            val viewHolder = parent.getChildViewHolder(child)
+            if (shouldApplyDecorationAt(viewHolder, itemCount)) {
                 if (orientation == RecyclerView.VERTICAL) {
-                    drawVertical(c, child, adapterPosition, itemCount, columns)
+                    drawVertical(canvas, child, position, itemCount, columns, parent)
                 } else {
-                    drawHorizontal(c, child, adapterPosition, itemCount, columns)
+                    drawHorizontal(canvas, child, position, itemCount, columns, parent)
                 }
             }
         }
@@ -278,32 +277,40 @@ class GridDividerDecoration(
         view: View,
         position: Int,
         itemCount: Int,
-        columns: Int
+        columns: Int,
+        recyclerView: RecyclerView
     ) {
         val bottomPosition = if (!inverted) {
             getBottomPosition(position, columns, itemCount)
         } else {
             getTopPosition(position, columns)
         }
-        if (bottomPosition != null && shouldApplyDecorationAt(bottomPosition, itemCount)) {
-            canvas.drawRect(
-                view.left.toFloat() + heightMargin,
-                view.bottom.toFloat() + widthMargin,
-                view.right.toFloat() - heightMargin,
-                view.bottom.toFloat() + size + widthMargin,
-                paint
-            )
+
+        if (bottomPosition != null) {
+            val viewHolder = recyclerView.findViewHolderForLayoutPosition(bottomPosition)
+            if (viewHolder != null && shouldApplyDecorationAt(viewHolder, itemCount)) {
+                canvas.drawRect(
+                    view.left.toFloat() + heightMargin,
+                    view.bottom.toFloat() + widthMargin,
+                    view.right.toFloat() - heightMargin,
+                    view.bottom.toFloat() + size + widthMargin,
+                    paint
+                )
+            }
         }
 
         val rightPosition = getRightPosition(position, columns, itemCount)
-        if (rightPosition != null && shouldApplyDecorationAt(rightPosition, itemCount)) {
-            canvas.drawRect(
-                view.right.toFloat() + widthMargin,
-                view.top.toFloat() + heightMargin,
-                view.right.toFloat() + widthMargin + size,
-                view.bottom.toFloat() - heightMargin,
-                paint
-            )
+        if (rightPosition != null) {
+            val viewHolder = recyclerView.findViewHolderForLayoutPosition(rightPosition)
+            if (viewHolder != null && shouldApplyDecorationAt(viewHolder, itemCount)) {
+                canvas.drawRect(
+                    view.right.toFloat() + widthMargin,
+                    view.top.toFloat() + heightMargin,
+                    view.right.toFloat() + widthMargin + size,
+                    view.bottom.toFloat() - heightMargin,
+                    paint
+                )
+            }
         }
     }
 
@@ -312,32 +319,39 @@ class GridDividerDecoration(
         view: View,
         position: Int,
         itemCount: Int,
-        columns: Int
+        columns: Int,
+        recyclerView: RecyclerView
     ) {
         val bottomPosition = if (!inverted) {
             getBottomPosition(position, columns, itemCount)
         } else {
             getTopPosition(position, columns)
         }
-        if (bottomPosition != null && shouldApplyDecorationAt(bottomPosition, itemCount)) {
-            canvas.drawRect(
-                view.right.toFloat() + widthMargin,
-                view.top.toFloat() + heightMargin,
-                view.right.toFloat() + widthMargin + size,
-                view.bottom.toFloat() - heightMargin,
-                paint
-            )
+        if (bottomPosition != null) {
+            val viewHolder = recyclerView.findViewHolderForLayoutPosition(bottomPosition)
+            if (viewHolder != null && shouldApplyDecorationAt(viewHolder, itemCount)) {
+                canvas.drawRect(
+                    view.right.toFloat() + widthMargin,
+                    view.top.toFloat() + heightMargin,
+                    view.right.toFloat() + widthMargin + size,
+                    view.bottom.toFloat() - heightMargin,
+                    paint
+                )
+            }
         }
 
         val rightPosition = getRightPosition(position, columns, itemCount)
-        if (rightPosition != null && shouldApplyDecorationAt(rightPosition, itemCount)) {
-            canvas.drawRect(
-                view.left.toFloat() + heightMargin,
-                view.bottom.toFloat() + widthMargin,
-                view.right.toFloat() - heightMargin,
-                view.bottom.toFloat() + widthMargin + size,
-                paint
-            )
+        if (rightPosition != null) {
+            val viewHolder = recyclerView.findViewHolderForLayoutPosition(rightPosition)
+            if (viewHolder != null && shouldApplyDecorationAt(viewHolder, itemCount)) {
+                canvas.drawRect(
+                    view.left.toFloat() + heightMargin,
+                    view.bottom.toFloat() + widthMargin,
+                    view.right.toFloat() - heightMargin,
+                    view.bottom.toFloat() + widthMargin + size,
+                    paint
+                )
+            }
         }
     }
 

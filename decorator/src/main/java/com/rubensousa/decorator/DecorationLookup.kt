@@ -16,14 +16,20 @@
 
 package com.rubensousa.decorator
 
+import androidx.recyclerview.widget.RecyclerView
+
 /**
- * Checks if a decoration should be applied for a given adapter position
+ * Checks if a decoration should be applied for a given [RecyclerView.ViewHolder]
  */
 interface DecorationLookup {
 
     /**
-     * @return true if the item at [position] should have decoration applied to
+     * @param viewHolder the ViewHolder currently in layout
+     *
+     * @param itemCount the item count at the layout stage. See [RecyclerView.State.getItemCount]
+     *
+     * @return true if the ViewHolder should have decoration applied to
      */
-    fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean
+    fun shouldApplyDecoration(viewHolder: RecyclerView.ViewHolder, itemCount: Int): Boolean
 
 }
