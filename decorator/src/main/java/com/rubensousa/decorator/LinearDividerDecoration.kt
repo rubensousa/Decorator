@@ -197,7 +197,8 @@ class LinearDividerDecoration(
             val child = parent.getChildAt(i)
             val layoutParams = child.layoutParams as RecyclerView.LayoutParams
             val position = layoutParams.viewLayoutPosition
-            if (shouldApplyDecorationAt(position, itemCount, getItemViewType(child, parent))) {
+            val viewHolder = parent.getChildViewHolder(child)
+            if (shouldApplyDecorationAt(viewHolder, itemCount)) {
                 if (orientation == RecyclerView.VERTICAL) {
                     drawVertical(canvas, child, position, itemCount, layoutManager)
                 } else {

@@ -21,12 +21,16 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.rubensousa.decorator.*
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.rubensousa.decorator.DecorationLookup
+import com.rubensousa.decorator.LinearBoundsMarginDecoration
+import com.rubensousa.decorator.LinearDividerDecoration
+import com.rubensousa.decorator.LinearMarginDecoration
+import com.rubensousa.decorator.MergeDecorationLookup
+import com.rubensousa.decorator.SingleItemDecorationLookup
 import com.rubensousa.decorator.sample.adapter.OptionAdapter
 import com.rubensousa.decorator.sample.extensions.dpToPx
 import com.rubensousa.decorator.sample.model.OptionModel
-import com.rubensousa.decorator.sample.DecorationFragmentArgs
-import com.rubensousa.decorator.sample.R
 
 class MainListController(private val fragment: Fragment) :
     OptionAdapter.OnOptionClickListener {
@@ -72,11 +76,11 @@ class MainListController(private val fragment: Fragment) :
                 topMargin = marginDecorationSize,
                 bottomMargin = marginDecorationSize,
                 decorationLookup = object : DecorationLookup {
-                    // We can specify if we don't want to apply a decoration at a given position
+                    // We can specify if we don't want to apply a decoration at a given ViewHolder
                     override fun shouldApplyDecoration(
-                        position: Int, itemCount: Int, itemViewType: Int
+                        viewHolder: ViewHolder, itemCount: Int
                     ): Boolean {
-                        return position != 4
+                        return viewHolder.layoutPosition != 4
                     }
                 }
             )
@@ -96,9 +100,10 @@ class MainListController(private val fragment: Fragment) :
                     SingleItemDecorationLookup(),
                     object : DecorationLookup {
                         override fun shouldApplyDecoration(
-                            position: Int, itemCount: Int, itemViewType: Int
+                            viewHolder: ViewHolder, itemCount: Int
                         ): Boolean {
-                            return position != 4 && position != 3
+                            val layoutPosition = viewHolder.layoutPosition
+                            return layoutPosition != 4 && layoutPosition != 3
                         }
                     })
             )
