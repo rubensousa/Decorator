@@ -5,7 +5,7 @@ package com.rubensousa.decorator
  */
 class SingleItemDecorationLookup : DecorationLookup {
 
-    override fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean {
+    override fun shouldApplyDecoration(position: Int, itemCount: Int, itemViewType: Int): Boolean {
         if (position == 0 && itemCount == 1) {
             return false
         }

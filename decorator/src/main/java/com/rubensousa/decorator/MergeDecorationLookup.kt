@@ -20,9 +20,9 @@ class MergeDecorationLookup private constructor(private val delegates: List<Deco
 
     }
 
-    override fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean {
+    override fun shouldApplyDecoration(position: Int, itemCount: Int, itemViewType: Int): Boolean {
         delegates.forEach { delegate ->
-            if (!delegate.shouldApplyDecoration(position, itemCount)) {
+            if (!delegate.shouldApplyDecoration(position, itemCount, itemViewType)) {
                 return false
             }
         }

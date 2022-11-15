@@ -122,8 +122,7 @@ class GridSpanMarginDecoration(
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     ) {
         val layoutParams = view.layoutParams as GridLayoutManager.LayoutParams
         val columnIndex = layoutParams.spanIndex
@@ -132,7 +131,7 @@ class GridSpanMarginDecoration(
             return
         }
 
-        val itemCount = layoutManager.itemCount
+        val itemCount = state.itemCount
         val columns = gridLayoutManager.spanCount
 
         if (gridLayoutManager.orientation == RecyclerView.VERTICAL) {

@@ -20,6 +20,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.annotation.Px
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.ceil
 
 /**
  * An item decoration that applies a fixed margin to all sides for a grid.
@@ -165,13 +166,12 @@ class GridMarginDecoration(
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     ) {
         val columns = columnProvider.getNumberOfColumns()
         val columnIndex = position.rem(columns)
 
-        val lines = Math.ceil(layoutManager.itemCount / columns.toDouble()).toInt()
+        val lines = ceil(state.itemCount / columns.toDouble()).toInt()
         val lineIndex = position / columns
 
         if (orientation == RecyclerView.VERTICAL) {

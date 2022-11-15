@@ -21,6 +21,7 @@ import android.view.View
 import androidx.annotation.Px
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.ceil
 
 /**
  * A [RecyclerView.ItemDecoration] that applies a margin to the bounds of the RecyclerView
@@ -199,12 +200,11 @@ class GridBoundsMarginDecoration(
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     ) {
         val columns = columnProvider.getNumberOfColumns()
         val columnIndex = position.rem(columns)
-        val lines = Math.ceil(layoutManager.itemCount / columns.toDouble()).toInt()
+        val lines = ceil(state.itemCount / columns.toDouble()).toInt()
         val lineIndex = position / columns
 
         if (orientation == RecyclerView.VERTICAL) {

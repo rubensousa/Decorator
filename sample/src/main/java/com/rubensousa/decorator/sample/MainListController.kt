@@ -73,7 +73,9 @@ class MainListController(private val fragment: Fragment) :
                 bottomMargin = marginDecorationSize,
                 decorationLookup = object : DecorationLookup {
                     // We can specify if we don't want to apply a decoration at a given position
-                    override fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean {
+                    override fun shouldApplyDecoration(
+                        position: Int, itemCount: Int, itemViewType: Int
+                    ): Boolean {
                         return position != 4
                     }
                 }
@@ -93,7 +95,9 @@ class MainListController(private val fragment: Fragment) :
                     // Disables decoration when there's only one item
                     SingleItemDecorationLookup(),
                     object : DecorationLookup {
-                        override fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean {
+                        override fun shouldApplyDecoration(
+                            position: Int, itemCount: Int, itemViewType: Int
+                        ): Boolean {
                             return position != 4 && position != 3
                         }
                     })

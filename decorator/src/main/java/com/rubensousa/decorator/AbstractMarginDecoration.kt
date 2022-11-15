@@ -33,19 +33,17 @@ abstract class AbstractMarginDecoration(private var decorationLookup: Decoration
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val lm = parent.layoutManager as RecyclerView.LayoutManager
         val layoutParams = view.layoutParams as RecyclerView.LayoutParams
+
         /**
-         * If the item was removed, use the existing layout position
-         * since the adapter position will be RecyclerView.NO_POSITION
+         *  We need to use the layout position since it's the only valid
+         *  source of truth at this stage.
+         *  The item could've been removed and adapter position
+         *  in that case is set to RecyclerView.NO_POSITION
          */
-        val position = if (layoutParams.isItemRemoved) {
-            layoutParams.viewLayoutPosition
-        } else {
-            layoutParams.absoluteAdapterPosition
-        }
-        if (shouldApplyDecorationAt(position, lm.itemCount)) {
-            getItemOffsets(outRect, view, position, parent, state, lm)
+        val position = layoutParams.viewLayoutPosition
+        if (shouldApplyDecorationAt(position, state.itemCount, getItemViewType(view, parent))) {
+            getItemOffsets(outRect, view, position, parent, state)
         }
     }
 
@@ -62,11 +60,16 @@ abstract class AbstractMarginDecoration(private var decorationLookup: Decoration
      * or false if position is not valid
      * or [decorationLookup] doesn't allow decoration for this [position]
      */
-    fun shouldApplyDecorationAt(position: Int, itemCount: Int): Boolean {
+    fun shouldApplyDecorationAt(position: Int, itemCount: Int, itemViewType: Int): Boolean {
         if (position == RecyclerView.NO_POSITION) {
             return false
         }
-        return decorationLookup?.shouldApplyDecoration(position, itemCount) ?: true
+        return decorationLookup?.shouldApplyDecoration(position, itemCount, itemViewType) ?: true
+    }
+
+    protected fun getItemViewType(view: View, recyclerView: RecyclerView): Int {
+        val viewHolder = recyclerView.getChildViewHolder(view)
+        return viewHolder.itemViewType
     }
 
     abstract fun getItemOffsets(
@@ -74,8 +77,7 @@ abstract class AbstractMarginDecoration(private var decorationLookup: Decoration
         view: View,
         position: Int,
         parent: RecyclerView,
-        state: RecyclerView.State,
-        layoutManager: RecyclerView.LayoutManager
+        state: RecyclerView.State
     )
 
 }

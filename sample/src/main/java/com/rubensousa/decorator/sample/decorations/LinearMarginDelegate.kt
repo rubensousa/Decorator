@@ -27,7 +27,7 @@ class LinearMarginDelegate(private val resources: Resources) : DecorationDelegat
 
     private var decoration = LinearMarginDecoration.create(
         margin = resources.dpToPx(getDefaultSizeDp()),
-        addBeforeFirstPosition = false,
+        addBeforeFirstPosition = true,
         addAfterLastPosition = false
     )
 
