@@ -35,7 +35,15 @@ abstract class AbstractMarginDecoration(private var decorationLookup: Decoration
     ) {
         val lm = parent.layoutManager as RecyclerView.LayoutManager
         val layoutParams = view.layoutParams as RecyclerView.LayoutParams
-        val position = layoutParams.absoluteAdapterPosition
+        /**
+         * If the item was removed, use the existing layout position
+         * since the adapter position will be RecyclerView.NO_POSITION
+         */
+        val position = if (layoutParams.isItemRemoved) {
+            layoutParams.viewLayoutPosition
+        } else {
+            layoutParams.absoluteAdapterPosition
+        }
         if (shouldApplyDecorationAt(position, lm.itemCount)) {
             getItemOffsets(outRect, view, position, parent, state, lm)
         }
