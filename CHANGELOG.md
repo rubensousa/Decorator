@@ -1,3 +1,25 @@
+# 2.1.0
+
+- Do not split decoration size in LinearMarginDecoration: [#27](https://github.com/rubensousa/Decorator/issues/27)
+- Fixed decorations not being applied for items removed: [#28](https://github.com/rubensousa/Decorator/issues/28)
+- **BREAKING CHANGE**: DecorationLookup now passes the current ViewHolder [#29](https://github.com/rubensousa/Decorator/issues/29):
+
+Before:
+
+```kotlin
+interface DecorationLookup {
+    fun shouldApplyDecoration(position: Int, itemCount: Int): Boolean
+}
+```
+
+After:
+
+```kotlin
+interface DecorationLookup {
+    fun shouldApplyDecoration(viewHolder: RecyclerView.ViewHolder, itemCount: Int): Boolean
+}
+```
+
 # 2.0.2
 
 - Moved `setDecorationLookup` to `AbstractMarginDecoration`
